@@ -107,6 +107,25 @@ $modulePath = $componentPath . '/core/components/commerce_clickcollect/src/Modul
 // Instruct Commerce to load modules from our directory, providing the base namespace and module path twice
 $commerce->loadModulesFromDirectory($modulePath, 'modmore\\Commerce_ClickCollect\\Modules\\', $modulePath);
 
+// Load our xPDO package
+$root = $componentPath.'/core/components/commerce_clickcollect/';
+$path = $root . '/model/';
+if (!$modx->addPackage('commerce_clickcollect', $path)) {
+    echo "Failed loading xPDO package - is the path correct?\n";
+}
+
+// Load the xPDOManager to create our custom tables
+$manager = $modx->getManager();
+
+$containers = [
+    clcoSchedule::class,
+    clcoScheduleSlot::class,
+];
+
+foreach ($containers as $container) {
+    $manager->createObjectContainer($container);
+}
+
 // Clear the cache
 $modx->cacheManager->refresh();
 
