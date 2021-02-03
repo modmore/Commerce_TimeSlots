@@ -27,4 +27,49 @@
 
         <aggregate alias="Schedule" class="clcoSchedule" local="schedule" foreign="id" cardinality="one" owner="foreign" />
     </object>
+
+
+    <object class="clcoDate" table="commext_clickcollect_date">
+        <field key="for_date" dbtype="varchar" precision="20" phptype="string" null="false" default="" />
+        <field key="schedule" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+
+        <composite alias="Slots" class="clcoDateSlot" local="id" foreign="for_date" cardinality="many" owner="local" />
+        <aggregate alias="Schedule" class="clcoSchedule" local="schedule" foreign="id" cardinality="one" owner="foreign" />
+    </object>
+
+    <object class="clcoDateSlot" table="commext_clickcollect_date_slots">
+        <field key="for_date" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+        <field key="base_slot" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+
+        <field key="schedule" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+        <field key="time_from" formatter="datetime" dbtype="int" precision="20" phptype="int" default="0" />
+        <field key="time_until" formatter="datetime" dbtype="int" precision="20" phptype="int" default="0" />
+        <field key="closes_after" formatter="datetime" dbtype="int" precision="20" phptype="int" default="0" />
+        <field key="max_reservations" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+        <field key="available_reservations" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+
+        <aggregate alias="Date" class="clcoDate" local="for_date" foreign="id" cardinality="one" owner="foreign" />
+
+        <index alias="schedule" name="schedule" primary="false" unique="false" type="BTREE">
+            <column key="schedule" length="" collation="A" null="false" />
+        </index>
+        <index alias="base_slot" name="base_slot" primary="false" unique="false" type="BTREE">
+            <column key="base_slot" length="" collation="A" null="false" />
+        </index>
+        <index alias="time_from" name="time_from" primary="false" unique="false" type="BTREE">
+            <column key="time_from" length="" collation="A" null="false" />
+        </index>
+        <index alias="time_until" name="time_until" primary="false" unique="false" type="BTREE">
+            <column key="time_until" length="" collation="A" null="false" />
+        </index>
+        <index alias="closes_after" name="closes_after" primary="false" unique="false" type="BTREE">
+            <column key="closes_after" length="" collation="A" null="false" />
+        </index>
+        <index alias="max_reservations" name="max_reservations" primary="false" unique="false" type="BTREE">
+            <column key="max_reservations" length="" collation="A" null="false" />
+        </index>
+        <index alias="available_reservations" name="available_reservations" primary="false" unique="false" type="BTREE">
+            <column key="available_reservations" length="" collation="A" null="false" />
+        </index>
+    </object>
 </model>
