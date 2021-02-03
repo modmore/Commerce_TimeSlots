@@ -21,7 +21,7 @@ class Delete extends Page {
         ]);
         if ($object) {
             $widget = new DeleteFormWidget($this->commerce, [
-                'title' => 'commerce_clickcollect.delete_slot_named'
+                'title' => 'commerce_clickcollect.delete_planning_slot_named'
             ]);
             $widget->setRecord($object);
             $widget->setClassKey('clcoDateSlot');

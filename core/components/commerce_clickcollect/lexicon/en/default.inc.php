@@ -20,6 +20,7 @@ $_lang['commerce_clickcollect.add_slot'] = 'Add slot';
 $_lang['commerce_clickcollect.edit_slot'] = 'Edit slot';
 $_lang['commerce_clickcollect.delete_slot'] = 'Delete slot';
 $_lang['commerce_clickcollect.delete_slot_named'] = 'Delete slot [[+time_from]] - [[+time_until]]';
+$_lang['commerce_clickcollect.delete_planning_slot_named'] = 'Delete slot [[+time_from_formatted]] - [[+time_until_formatted]]';
 $_lang['commerce_clickcollect.duplicate_slot'] = 'Duplicate slot';
 $_lang['commerce_clickcollect.add_schedule'] = 'Add schedule';
 $_lang['commerce_clickcollect.edit_schedule'] = 'Edit schedule';
