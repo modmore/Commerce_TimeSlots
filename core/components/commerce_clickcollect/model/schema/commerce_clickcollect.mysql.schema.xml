@@ -35,6 +35,13 @@
 
         <composite alias="Slots" class="clcoDateSlot" local="id" foreign="for_date" cardinality="many" owner="local" />
         <aggregate alias="Schedule" class="clcoSchedule" local="schedule" foreign="id" cardinality="one" owner="foreign" />
+
+        <index alias="for_date" name="for_date" primary="false" unique="false" type="BTREE">
+            <column key="for_date" length="" collation="A" null="false" />
+        </index>
+        <index alias="schedule" name="schedule" primary="false" unique="false" type="BTREE">
+            <column key="schedule" length="" collation="A" null="false" />
+        </index>
     </object>
 
     <object class="clcoDateSlot" table="commext_clickcollect_date_slots">

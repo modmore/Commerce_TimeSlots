@@ -42,6 +42,41 @@ $xpdo_meta_map['clcoDate']= array (
       'default' => 0,
     ),
   ),
+  'indexes' => 
+  array (
+    'for_date' => 
+    array (
+      'alias' => 'for_date',
+      'primary' => false,
+      'unique' => false,
+      'type' => 'BTREE',
+      'columns' => 
+      array (
+        'for_date' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+      ),
+    ),
+    'schedule' => 
+    array (
+      'alias' => 'schedule',
+      'primary' => false,
+      'unique' => false,
+      'type' => 'BTREE',
+      'columns' => 
+      array (
+        'schedule' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+      ),
+    ),
+  ),
   'composites' => 
   array (
     'Slots' => 

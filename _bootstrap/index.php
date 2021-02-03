@@ -128,6 +128,9 @@ foreach ($containers as $container) {
     $manager->createObjectContainer($container);
 }
 
+$manager->addIndex(clcoDate::class, 'for_date');
+$manager->addIndex(clcoDate::class, 'schedule');
+
 // Clear the cache
 $modx->cacheManager->refresh();
 
