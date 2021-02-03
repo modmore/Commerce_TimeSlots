@@ -5,10 +5,9 @@ namespace modmore\Commerce_ClickCollect\Admin\Schedule\Slot;
 use modmore\Commerce\Admin\Sections\SimpleSection;
 use modmore\Commerce\Admin\Page;
 use modmore\Commerce\Admin\Widgets\DeleteFormWidget;
-use modmore\Commerce\Admin\Widgets\TextWidget;
 
 class Delete extends Page {
-    public $key = 'clickcollect/schedule/slot\delete';
+    public $key = 'clickcollect/schedule/slot/delete';
     public $title = 'commerce_clickcollect.delete_slot';
     public static $permissions = ['commerce'];
 
@@ -26,7 +25,7 @@ class Delete extends Page {
             ]);
             $widget->setRecord($object);
             $widget->setClassKey('clcoSchedule');
-            $widget->setFormAction($this->adapter->makeAdminUrl('clickcollect/schedule/delete', ['id' => $object->get('id')]));
+            $widget->setFormAction($this->adapter->makeAdminUrl('clickcollect/schedule/slot/delete', ['id' => $object->get('id')]));
             $widget->setUp();
             $section->addWidget($widget);
             $this->addSection($section);
