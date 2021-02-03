@@ -42,8 +42,8 @@ class ClickCollect extends BaseModule {
         $this->adapter->loadPackage('commerce_clickcollect', $path);
 
         // Add template path to twig
-//        $root = dirname(__DIR__, 2);
-//        $this->commerce->view()->addTemplatesPath($root . '/templates/');
+        $root = dirname(__DIR__, 2);
+        $this->commerce->view()->addTemplatesPath($root . '/templates/');
 
         $dispatcher->addListener(\Commerce::EVENT_DASHBOARD_INIT_GENERATOR, [$this, 'initGenerator']);
         $dispatcher->addListener(\Commerce::EVENT_DASHBOARD_GET_MENU, [$this, 'getMenu']);
@@ -59,6 +59,10 @@ class ClickCollect extends BaseModule {
         $generator->addPage('clickcollect/schedule/edit', Update::class);
         $generator->addPage('clickcollect/schedule/delete', Delete::class);
         $generator->addPage('clickcollect/schedule/duplicate', Duplicate::class);
+        $generator->addPage('clickcollect/schedule/slot/add', \modmore\Commerce_ClickCollect\Admin\Schedule\Slot\Create::class);
+        $generator->addPage('clickcollect/schedule/slot/edit', \modmore\Commerce_ClickCollect\Admin\Schedule\Slot\Update::class);
+        $generator->addPage('clickcollect/schedule/slot/delete', \modmore\Commerce_ClickCollect\Admin\Schedule\Slot\Delete::class);
+        $generator->addPage('clickcollect/schedule/slot/duplicate', \modmore\Commerce_ClickCollect\Admin\Schedule\Slot\Duplicate::class);
     }
 
     public function getMenu(TopNavMenu $event)

@@ -49,8 +49,15 @@ class Grid extends GridWidget {
 
         $item['slots'] = [];
 
+        $c = $this->adapter->newQuery(\clcoScheduleSlot::class);
+        $c->where([
+            'schedule' => $schedule->get('id')
+        ]);
+        $c->sortby('time_from', 'ASC');
+        $c->sortby('time_until', 'ASC');
+        
         /** @var \clcoScheduleSlot[] $slots */
-        $slots = $schedule->getMany('Slots');
+        $slots = $this->adapter->getCollection(\clcoScheduleSlot::class, $c);
         foreach ($slots as $slot) {
             $ta = $slot->toArray();
             $editSlotLink = $this->adapter->makeAdminUrl('clickcollect/schedule/slot/edit', ['id' => $slot->get('id')]);
@@ -62,9 +69,20 @@ class Grid extends GridWidget {
             $ta['delete'] = (new Action())
                 ->setUrl($deleteSlotLink)
                 ->setTitle($this->adapter->lexicon('commerce_clickcollect.delete_slot'))
-                ->setIcon('icon-delete');
+                ->setIcon('icon-trash');
+            $duplicateSlotLink = $this->adapter->makeAdminUrl('clickcollect/schedule/slot/duplicate', ['id' => $slot->get('id')]);
+            $ta['duplicate'] = (new Action())
+                ->setUrl($duplicateSlotLink)
+                ->setTitle($this->adapter->lexicon('commerce_clickcollect.duplicate_slot'))
+                ->setIcon('icon-copy');
+
             $item['slots'][] = $ta;
         }
+
+        $addSlotLink = $this->adapter->makeAdminUrl('clickcollect/schedule/slot/add', ['schedule' => $schedule->get('id')]);
+        $item['add_slot_link'] = $addSlotLink;
+
+        $item['slots'] = $this->commerce->view()->render('clickcollect/admin/schedule_slots.twig', $item);
 
         $editLink = $this->adapter->makeAdminUrl('clickcollect/schedule/edit', ['id' => $schedule->get('id')]);
         $item['name'] = '<a href="' . $editLink . '" class="commerce-ajax-modal">' . $this->encode($item['name']) . '</a>';
@@ -72,7 +90,6 @@ class Grid extends GridWidget {
 
         $item['actions'] = [];
 
-        $addSlotLink = $this->adapter->makeAdminUrl('clickcollect/schedule/slot/add', ['schedule' => $schedule->get('id')]);
         $item['actions'][] = (new Action())
             ->setUrl($addSlotLink)
             ->setTitle($this->adapter->lexicon('commerce_clickcollect.add_slot'))

@@ -1,0 +1,33 @@
+<ul>
+    {% for slot in slots %}
+    <li class="c-status-change">
+        <div class="c-status-change__header">
+            <a href="{{ slot.edit.url }}" class="commerce-ajax-modal c-status-change__name" title="{{ slot.edit.title }}">
+                {{ slot.time_from }}&mdash;{{ slot.time_until }}
+                <i class="icon {{ slot.edit.icon }}"></i>
+            </a>
+
+            <span style="color: #6a6a6a;">
+                {{ lex('commerce_clickcollect.lead_time') }}: {{ slot.lead_time }}{{ lex('commerce_clickcollect.minutes') }}
+                |
+                {{ lex('commerce_clickcollect.max_reservations') }}: {{ slot.max_reservations }}
+            </span>
+
+            <span class="right">
+                <a href="{{ slot.duplicate.url }}" class="commerce-ajax-modal" title="{{ slot.duplicate.title }}">
+                    <i class="icon {{ slot.duplicate.icon }}"></i>
+                </a>
+                <a href="{{ slot.delete.url }}" class="commerce-ajax-modal" title="{{ slot.delete.title }}">
+                    <i class="icon {{ slot.delete.icon }}"></i>
+                </a>
+            </span>
+{#            {{ dump(slot) }}#}
+        </div>
+    </li>
+    {% else %}
+        <li class="c-status-change"><em>No slots defined for this schedule.</em></li>
+    {% endfor %}
+    <li class="c-status-change">
+        <a href="{{ add_slot_link }}" class="commerce-ajax-modal c ui tiny icon button"><i class="icon icon-plus"></i> Add slot</a>
+    </li>
+</ul>
