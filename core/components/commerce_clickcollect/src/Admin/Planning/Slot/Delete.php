@@ -1,20 +1,20 @@
 <?php
 
-namespace modmore\Commerce_ClickCollect\Admin\Schedule\Slot;
+namespace modmore\Commerce_ClickCollect\Admin\Planning\Slot;
 
 use modmore\Commerce\Admin\Sections\SimpleSection;
 use modmore\Commerce\Admin\Page;
 use modmore\Commerce\Admin\Widgets\DeleteFormWidget;
 
 class Delete extends Page {
-    public $key = 'clickcollect/schedule/slot/delete';
+    public $key = 'clickcollect/planning/slot/delete';
     public $title = 'commerce_clickcollect.delete_slot';
     public static $permissions = ['commerce'];
 
     public function setUp()
     {
         $objectId = (int)$this->getOption('id', 0);
-        $object = $this->adapter->getObject(\clcoScheduleSlot::class, ['id' => $objectId]);
+        $object = $this->adapter->getObject(\clcoDateSlot::class, ['id' => $objectId]);
 
         $section = new SimpleSection($this->commerce, [
             'title' => $this->title
@@ -24,8 +24,8 @@ class Delete extends Page {
                 'title' => 'commerce_clickcollect.delete_slot_named'
             ]);
             $widget->setRecord($object);
-            $widget->setClassKey('clcoScheduleSlot');
-            $widget->setFormAction($this->adapter->makeAdminUrl('clickcollect/schedule/slot/delete', ['id' => $object->get('id')]));
+            $widget->setClassKey('clcoDateSlot');
+            $widget->setFormAction($this->adapter->makeAdminUrl('clickcollect/planning/slot/delete', ['id' => $object->get('id')]));
             $widget->setUp();
             $section->addWidget($widget);
             $this->addSection($section);

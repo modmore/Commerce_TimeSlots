@@ -118,6 +118,8 @@ if (!$modx->addPackage('commerce_clickcollect', $path)) {
 $manager = $modx->getManager();
 
 $containers = [
+    clcoDate::class,
+    clcoDateSlot::class,
     clcoSchedule::class,
     clcoScheduleSlot::class,
 ];

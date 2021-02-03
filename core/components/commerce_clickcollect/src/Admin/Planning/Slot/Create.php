@@ -1,12 +1,12 @@
 <?php
 
-namespace modmore\Commerce_ClickCollect\Admin\Schedule\Slot;
+namespace modmore\Commerce_ClickCollect\Admin\Planning\Slot;
 
 use modmore\Commerce\Admin\Page;
 use modmore\Commerce\Admin\Sections\SimpleSection;
 
 class Create extends Page {
-    public $key = 'clickcollect/schedule/slot/create';
+    public $key = 'clickcollect/planning/slot/create';
     public $title = 'commerce_clickcollect.add_slot';
     public static $permissions = ['commerce'];
 

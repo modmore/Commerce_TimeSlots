@@ -11,5 +11,24 @@
  */
 class clcoDateSlot extends comSimpleObject
 {
+    public function isAvailable(): bool
+    {
+        if (time() > $this->get('closes_after')) {
+            return false;
+        }
+
+        if ($this->get('max_reservations') > -1 && $this->get('available_reservations') < 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function setFieldValueMax_reservations($value)
+    {
+        // @todo Replace this with proper count() of used reservations for accurate accounting
+        $this->set('available_reservations', $value - ($this->get('max_reservations') - $this->get('available_reservations')));
+        $this->set('max_reservations', $value);
+    }
 
 }
