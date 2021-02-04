@@ -17,6 +17,9 @@ class Grid extends GridWidget {
 
         $c = $this->adapter->newQuery(\clcoDate::class);
         $c->select($this->adapter->getSelectColumns(\clcoDate::class, \clcoDate::class));
+        $c->where([
+            'for_date:>=' => date('Y-m-d')
+        ]);
 
         if (31 > $this->adapter->getCount(\clcoDate::class, $c)) {
             \clcoDate::createFutureDates($this->adapter);
