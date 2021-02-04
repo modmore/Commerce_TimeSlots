@@ -40,3 +40,10 @@ $_lang['commerce_clickcollect.unlimited_reservations_available'] = 'unlimited re
 $_lang['commerce_clickcollect.reservations_available'] = 'reservations available';
 $_lang['commerce_clickcollect.no_date_slots'] = 'No slots defined, date not available for customers.';
 $_lang['commerce_clickcollect.different_schedule'] = 'This slot is not part of the schedule selected for the current date. It may have been manually added or was left over after replacing the schedule.';
+
+// Shipping method / frontend
+$_lang['commerce_clickcollect.max_days_visible'] = 'Maximum days visible';
+$_lang['commerce_clickcollect.max_days_visible.desc'] = 'How many days into the future you want customers to be able of selecting their desired date slot. The minimum time between when the customer places their order and the available timeslots is managed through the Click & Collect planning ("closes after") and schedules ("lead time").';
+$_lang['commerce_clickcollect.slot_unavailable'] = 'No longer available';
+$_lang['commerce_clickcollect.no_options_available'] = 'Unfortunately there are no Click & Collect timeslots available at the moment. Please check again later, choose a different shipping method, or contact us for help.';
+$_lang['commerce_clickcollect.num_available_slots'] = '[[+num]] available slots';

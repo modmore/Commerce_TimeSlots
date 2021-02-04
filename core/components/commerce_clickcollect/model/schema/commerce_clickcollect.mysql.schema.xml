@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model package="commerce_clickcollect" baseClass="comSimpleObject" platform="mysql" defaultEngine="InnoDB" version="1.1">
 <!-- @todo   <object class="ClickCollectStatusChangeAction" extends="comStatusChangeAction" />-->
-<!-- @todo   <object class="ClickCollectShippingMethod" extends="comShippingMethod" />-->
+    <object class="ClickCollectShippingMethod" extends="comShippingMethod" />
 
     <object class="clcoSchedule" table="commext_clickcollect_schedule">
         <field key="name" dbtype="varchar" precision="190" phptype="string" null="false" default="" />
@@ -77,6 +77,31 @@
         </index>
         <index alias="available_reservations" name="available_reservations" primary="false" unique="false" type="BTREE">
             <column key="available_reservations" length="" collation="A" null="false" />
+        </index>
+    </object>
+
+    <object class="clcoOrderSlot" table="commext_clickcollect_order">
+        <field key="for_date" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+        <field key="slot" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+        <field key="order" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+        <field key="shipment" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+
+        <aggregate alias="Date" class="clcoDate" local="for_date" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Slot" class="clcoDateSlot" local="slot" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Order" class="comOrder" local="order" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Shipment" class="comOrderShipment" local="shipment" foreign="id" cardinality="one" owner="foreign" />
+
+        <index alias="for_date" name="for_date" primary="false" unique="false" type="BTREE">
+            <column key="for_date" length="" collation="A" null="false" />
+        </index>
+        <index alias="slot" name="slot" primary="false" unique="false" type="BTREE">
+            <column key="slot" length="" collation="A" null="false" />
+        </index>
+        <index alias="order" name="order" primary="false" unique="false" type="BTREE">
+            <column key="order" length="" collation="A" null="false" />
+        </index>
+        <index alias="shipment" name="shipment" primary="false" unique="false" type="BTREE">
+            <column key="shipment" length="" collation="A" null="false" />
         </index>
     </object>
 </model>
