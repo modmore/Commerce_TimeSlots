@@ -78,32 +78,41 @@ class ClickCollect extends BaseModule {
     {
         $items = $event->getItems();
 
+        $submenu = [];
+
+        $methods = $this->adapter->getCollection('comShippingMethod', [
+            'class_key' => \ClickCollectShippingMethod::class,
+            'removed' => false,
+        ]);
+        $first = null;
+        foreach ($methods as $method) {
+            if (!$first) {
+                $first = $this->adapter->makeAdminUrl('clickcollect/planning', ['method' => $method->get('id')]);
+            }
+            $submenu[] = [
+                'name' => $method->get('name') . ' ' . $this->adapter->lexicon('commerce_clickcollect.planning'),
+                'key' => 'clickcollect/planning-' . $method->get('id'),
+                'icon' => 'icon icon-calendar',
+                'link' => $this->adapter->makeAdminUrl('clickcollect/planning', ['method' => $method->get('id')]),
+            ];
+        }
+        if (!$first) {
+            $first = $this->adapter->makeAdminUrl('clickcollect/schedule');
+        }
+        $submenu[] = [
+            'name' => $this->adapter->lexicon('commerce_clickcollect.schedule'),
+            'key' => 'clickcollect/schedule',
+            'icon' => 'icon icon-bars',
+            'link' => $this->adapter->makeAdminUrl('clickcollect/schedule'),
+        ];
+
         $items = $this->insertInArray($items, [
             'clickcollect' => [
                 'name' => $this->adapter->lexicon('commerce_clickcollect'),
                 'key' => 'clickcollect',
                 'icon' => 'icon icon-shopping-cart',
-                'link' => $this->adapter->makeAdminUrl('clickcollect/planning'),
-                'submenu' => [
-//                    [
-//                        'name' => $this->adapter->lexicon('commerce_clickcollect.orders'),
-//                        'key' => 'clickcollect/orders',
-//                        'icon' => 'icon icon-shopping-cart',
-//                        'link' => $this->adapter->makeAdminUrl('clickcollect/orders'),
-//                    ],
-                    [
-                        'name' => $this->adapter->lexicon('commerce_clickcollect.planning'),
-                        'key' => 'clickcollect/planning',
-                        'icon' => 'icon icon-calendar',
-                        'link' => $this->adapter->makeAdminUrl('clickcollect/planning'),
-                    ],
-                    [
-                        'name' => $this->adapter->lexicon('commerce_clickcollect.schedule'),
-                        'key' => 'clickcollect/schedule',
-                        'icon' => 'icon icon-bars',
-                        'link' => $this->adapter->makeAdminUrl('clickcollect/schedule'),
-                    ],
-                ]
+                'link' => $first,
+                'submenu' => $submenu,
             ]
         ], 4);
 
