@@ -60,6 +60,14 @@ class Form extends FormWidget
             'min' => '-1'
         ]);
 
+        $fields[] = new NumberField($this->commerce, [
+            'name' => 'price',
+            'label' => $this->adapter->lexicon('commerce_clickcollect.price'),
+            'description' => $this->adapter->lexicon('commerce_clickcollect.price.desc'),
+            'input_class' => 'commerce-field-currency',
+            'validation' => [],
+        ]);
+
         return $fields;
     }
 

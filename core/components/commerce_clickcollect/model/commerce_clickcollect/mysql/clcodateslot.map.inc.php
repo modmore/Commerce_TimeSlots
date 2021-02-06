@@ -29,6 +29,7 @@ $xpdo_meta_map['clcoDateSlot']= array (
     'closes_after' => 0,
     'max_reservations' => 0,
     'available_reservations' => 0,
+    'price' => 0,
   ),
   'fieldMeta' => 
   array (
@@ -100,6 +101,15 @@ $xpdo_meta_map['clcoDateSlot']= array (
     array (
       'dbtype' => 'int',
       'precision' => '10',
+      'phptype' => 'integer',
+      'null' => false,
+      'default' => 0,
+    ),
+    'price' => 
+    array (
+      'formatter' => 'financial',
+      'dbtype' => 'int',
+      'precision' => '20',
       'phptype' => 'integer',
       'null' => false,
       'default' => 0,

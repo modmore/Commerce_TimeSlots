@@ -174,4 +174,16 @@ class ClickCollectShippingMethod extends comShippingMethod
 
         return $options;
     }
+
+    public function getPriceForShipment(comOrderShipment $shipment)
+    {
+        $price = parent::getPriceForShipment($shipment);
+
+        $slotInfo = $shipment->getProperty('clickcollect_slot_info');
+        if (is_array($slotInfo) && array_key_exists('price', $slotInfo) && $slotInfo['shipping_method'] === $this->get('id')) {
+            $price += (int)$slotInfo['price'];
+        }
+
+        return $price;
+    }
 }

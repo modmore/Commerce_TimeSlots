@@ -134,6 +134,8 @@ $manager->addIndex(clcoDate::class, 'schedule');
 $manager->addField(clcoDateSlot::class, 'shipping_method', ['after' => 'base_slot']);
 $manager->addIndex(clcoDateSlot::class, 'shipping_method');
 $manager->addIndex(clcoDateSlot::class, 'for_date');
+$manager->addField(clcoDateSlot::class, 'price', ['after' => 'available_reservations']);
+$manager->addField(clcoScheduleSlot::class, 'price', ['after' => 'max_reservations']);
 
 // Clear the cache
 $modx->cacheManager->refresh();

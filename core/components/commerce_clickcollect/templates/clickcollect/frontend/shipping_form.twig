@@ -39,6 +39,11 @@
                                 >
                                 <label class="c-payment-method-issuer__label" for="c-cnc-{{ shipment.id }}-{{ method.id }}-slot-{{ slot.id }}">
 {#                                    <img class="c-payment-method-issuer__image" src="{{ issuer.image.svg }}" alt="{{ issuer.name }}">#}
+                                    {% if (slot.price + method.price) != 0 %}
+                                        <span style="position: absolute; top: 0.25em; right: 0.7em; background: #fff; padding: 0.25em; border-radius: 5px; font-weight: normal">
+                                            {{ (method.price + slot.price)|format_currency }}
+                                        </span>
+                                    {% endif %}
                                     <span class="c-payment-method-issuer__name">
                                         {{ slot.time_from|date('H:i') }}&ndash;{{ slot.time_until|date('H:i') }} {{ dateInfo.locale_date_tz }}
 

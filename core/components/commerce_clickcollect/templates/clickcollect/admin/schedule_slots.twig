@@ -11,6 +11,10 @@
                 {{ lex('commerce_clickcollect.lead_time') }}: {{ slot.lead_time }}{{ lex('commerce_clickcollect.minutes') }}
                 |
                 {{ lex('commerce_clickcollect.max_reservations') }}: {{ slot.max_reservations }}
+                {% if slot.price != 0 %}
+                    |
+                    {{ slot.price_formatted }}
+                {% endif %}
             </span>
 
             <span class="right">

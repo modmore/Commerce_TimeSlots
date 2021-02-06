@@ -98,6 +98,7 @@ class Form extends FormWidget
                 'schedule' => $schedule->get('id'),
                 'max_reservations' => $baseSlot->get('max_reservations'),
                 'available_reservations' => $baseSlot->get('max_reservations'),
+                'price' => $baseSlot->get('price'),
             ]);
 
             // Calculate the timeFrom and timeUntil using DateTime. This makes sure it uses the servers' timezone

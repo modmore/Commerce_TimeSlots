@@ -25,6 +25,7 @@ $xpdo_meta_map['clcoScheduleSlot']= array (
     'time_until' => '',
     'lead_time' => '',
     'max_reservations' => 0,
+    'price' => 0,
   ),
   'fieldMeta' => 
   array (
@@ -64,6 +65,15 @@ $xpdo_meta_map['clcoScheduleSlot']= array (
     array (
       'dbtype' => 'int',
       'precision' => '10',
+      'phptype' => 'integer',
+      'null' => false,
+      'default' => 0,
+    ),
+    'price' => 
+    array (
+      'formatter' => 'financial',
+      'dbtype' => 'int',
+      'precision' => '20',
       'phptype' => 'integer',
       'null' => false,
       'default' => 0,

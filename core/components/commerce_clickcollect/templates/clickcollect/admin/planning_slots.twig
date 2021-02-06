@@ -25,6 +25,10 @@
                     <span style="font-weight: 500">{{ slot.available_reservations }}</span>/{{ slot.max_reservations }}
                     {{ lex('commerce_clickcollect.reservations_available') }}
                 {% endif %}
+                {% if slot.price != 0 %}
+                    |
+                    {{ slot.price_formatted }}
+                {% endif %}
             </span>
 
             {% if schedule != slot.schedule %}
