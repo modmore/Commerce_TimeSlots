@@ -3,6 +3,7 @@ namespace modmore\Commerce_ClickCollect\Modules;
 
 use modmore\Commerce\Events\Admin\GeneratorEvent;
 use modmore\Commerce\Events\Admin\TopNavMenu;
+use modmore\Commerce\Events\Checkout;
 use modmore\Commerce\Modules\BaseModule;
 use modmore\Commerce_ClickCollect\Admin\Schedule\Create;
 use modmore\Commerce_ClickCollect\Admin\Schedule\Delete;
@@ -47,6 +48,7 @@ class ClickCollect extends BaseModule {
 
         $dispatcher->addListener(\Commerce::EVENT_DASHBOARD_INIT_GENERATOR, [$this, 'initGenerator']);
         $dispatcher->addListener(\Commerce::EVENT_DASHBOARD_GET_MENU, [$this, 'getMenu']);
+        $dispatcher->addListener(\Commerce::EVENT_CHECKOUT_BEFORE_STEP, [$this, 'beforeCheckoutStep']);
     }
 
     public function initGenerator(GeneratorEvent $event)
@@ -106,6 +108,64 @@ class ClickCollect extends BaseModule {
         ], 4);
 
         $event->setItems($items);
+    }
+
+    public function beforeCheckoutStep(Checkout $event)
+    {
+        $order = $event->getOrder();
+        $step = $event->getStepKey();
+        $response = $event->getResponse();
+
+        $canChange =
+            $order->getState() === \comOrder::STATE_CART
+            && !$order->getCurrentTransaction()
+            && $step !== 'thank-you';
+
+        $shipments = $order->getShipments();
+        foreach ($shipments as $shipment) {
+            $method = $shipment->getShippingMethod();
+            if (!$method) {
+                continue;
+            }
+
+            if ($method->get('class_key') !== \ClickCollectShippingMethod::class) {
+                continue;
+            }
+
+            $slotId = $shipment->getProperty('clickcollect_slot');
+            if (!$slotId) {
+                if ($step === 'payment') {
+                    $response->addError($this->adapter->lexicon('commerce_clickcollect.select_a_slot'));
+                    $response->setRedirect('checkout', ['step' => 'shipping']);
+                }
+                continue;
+            }
+
+            /** @var \clcoDateSlot $slot */
+            $slot = $this->adapter->getObject(\clcoDateSlot::class, ['id' => (int)$slotId]);
+            if (!$slot) {
+                $shipment->unsetProperty('clickcollect_slot');
+                $shipment->unsetProperty('clickcollect_slot_info');
+                $shipment->unsetProperty('clickcollect_slot_autoselected');
+                $shipment->save();
+
+                if ($step === 'payment') {
+                    $response->addError($this->adapter->lexicon('commerce_clickcollect.select_a_slot'));
+                    $response->setRedirect('checkout', ['step' => 'shipping']);
+                }
+                continue;
+            }
+
+            if ($canChange && !$slot->isAvailable()) {
+                $shipment->unsetProperty('clickcollect_slot');
+                $shipment->unsetProperty('clickcollect_slot_info');
+                $shipment->unsetProperty('clickcollect_slot_autoselected');
+                $shipment->save();
+
+                $response->addError($this->adapter->lexicon('commerce_clickcollect.selected_slot_no_longer_available'));
+                $response->setRedirect('checkout', ['step' => 'shipping']);
+            }
+        }
     }
 
     public function getModuleConfiguration(\comModule $module)

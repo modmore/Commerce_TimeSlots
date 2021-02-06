@@ -47,3 +47,5 @@ $_lang['commerce_clickcollect.max_days_visible.desc'] = 'How many days into the 
 $_lang['commerce_clickcollect.slot_unavailable'] = 'No longer available';
 $_lang['commerce_clickcollect.no_options_available'] = 'Unfortunately there are no Click & Collect timeslots available at the moment. Please check again later, choose a different shipping method, or contact us for help.';
 $_lang['commerce_clickcollect.num_available_slots'] = '[[+num]] available slots';
+$_lang['commerce_clickcollect.selected_slot_no_longer_available'] = 'The time slot you selected for delivery or pickup is unfortunately no longer available. Please choose a new time slot to complete your order.';
+$_lang['commerce_clickcollect.select_a_slot'] = 'Please select a time slot before completing your order.';
