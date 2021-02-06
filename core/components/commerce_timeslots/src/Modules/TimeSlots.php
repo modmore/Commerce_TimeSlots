@@ -72,6 +72,8 @@ class TimeSlots extends BaseModule {
         $generator->addPage('timeslots/planning/slot/edit', \modmore\Commerce_TimeSlots\Admin\Planning\Slot\Update::class);
         $generator->addPage('timeslots/planning/slot/delete', \modmore\Commerce_TimeSlots\Admin\Planning\Slot\Delete::class);
         $generator->addPage('timeslots/planning/slot/duplicate', \modmore\Commerce_TimeSlots\Admin\Planning\Slot\Duplicate::class);
+
+        $generator->addPage('orders/timeslots', \modmore\Commerce_TimeSlots\Admin\Orders\Overview::class);
     }
 
     public function getMenu(TopNavMenu $event)
@@ -79,6 +81,7 @@ class TimeSlots extends BaseModule {
         $items = $event->getItems();
 
         $submenu = [];
+        $ordersSubmenu = &$items['orders']['submenu'];
 
         $methods = $this->adapter->getCollection('comShippingMethod', [
             'class_key' => \TimeSlotsShippingMethod::class,
@@ -94,6 +97,13 @@ class TimeSlots extends BaseModule {
                 'key' => 'timeslots/planning-' . $method->get('id'),
                 'icon' => 'icon icon-calendar',
                 'link' => $this->adapter->makeAdminUrl('timeslots/planning', ['method' => $method->get('id')]),
+            ];
+
+            $ordersSubmenu[] = [
+                'name' => $method->get('name'),
+                'key' => 'orders/timeslot_' . $method->get('id'),
+                'icon' => 'icon icon-calendar',
+                'link' => $this->adapter->makeAdminUrl('orders/timeslots', ['method' => $method->get('id')]),
             ];
         }
         if (!$first) {

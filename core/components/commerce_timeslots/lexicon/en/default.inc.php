@@ -7,6 +7,7 @@ $_lang['commerce_timeslots.planning'] = 'Planning';
 $_lang['commerce_timeslots.planning_description'] = 'Use the planning to set the available timeslots on specific dates, up to 31 days into the future. To quickly set your planning, set slots from a pre-made Schedule. If needed you can add and change individual slots to fine-tune availability on specific dates. Important: if there are no slots set on a certain date, the customer cannot select it.';
 $_lang['commerce_timeslots.schedule'] = 'Schedule';
 $_lang['commerce_timeslots.schedule_description'] = 'Create Schedules to manage different configurations of time slots for pickup. For example, create a "Weekday" schedule that you can apply to Monday-Friday to cover standard opening hours, and a "Saturday" schedule for your opening hours in the weekend. You\'ll apply schedules to specific dates in the "Planning" section and will be able of changing individual slots on a specific date there as well.';
+$_lang['commerce_timeslots.slot'] = 'Time slot';
 $_lang['commerce_timeslots.slots'] = 'Slots';
 $_lang['commerce_timeslots.time_from'] = 'Start time';
 $_lang['commerce_timeslots.time_until'] = 'End time';
@@ -53,3 +54,6 @@ $_lang['commerce_timeslots.select_a_slot'] = 'Please select a time slot before c
 
 $_lang['commerce.add_ReserveTimeSlotStatusChangeAction'] = 'Reserve Time Slot';
 $_lang['commerce.ReserveTimeSlotStatusChangeAction'] = 'Reserve Time Slot';
+
+$_lang['commerce_timeslots.orders'] = 'Received Orders for ';
+
