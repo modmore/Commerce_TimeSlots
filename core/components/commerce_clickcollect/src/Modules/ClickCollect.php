@@ -83,7 +83,7 @@ class ClickCollect extends BaseModule {
                 'name' => $this->adapter->lexicon('commerce_clickcollect'),
                 'key' => 'clickcollect',
                 'icon' => 'icon icon-shopping-cart',
-                'link' => $this->adapter->makeAdminUrl('clickcollect/schedule'),
+                'link' => $this->adapter->makeAdminUrl('clickcollect/planning'),
                 'submenu' => [
 //                    [
 //                        'name' => $this->adapter->lexicon('commerce_clickcollect.orders'),
