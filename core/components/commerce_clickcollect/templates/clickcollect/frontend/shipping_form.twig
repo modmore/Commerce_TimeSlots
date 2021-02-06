@@ -11,7 +11,7 @@
                         value="{{ date }}"
                         class="c-payment-method-option__input"
                         id="c-cnc-{{ shipment.id }}-{{ method.id }}-date-{{ date }}"
-                        {% if loop.first or selected_date == date%}checked="checked"{% endif %}
+                        {% if selected_date == date %}checked="checked"{% endif %}
                 >
                 <label class="c-payment-method-option__label" for="c-cnc-{{ shipment.id }}-{{ method.id }}-date-{{ date }}">
 {#                    <img class="c-payment-method-option__image" src="{{ method.image.svg }}" alt="{{ method.description }}">#}
