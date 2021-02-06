@@ -6,7 +6,7 @@ $tstart = $mtime;
 set_time_limit(0);
 
 /* define package name */
-define('PKG_NAME', 'Commerce_ClickCollect');
+define('PKG_NAME', 'Commerce_TimeSlots');
 define('PKG_NAME_LOWER', strtolower(PKG_NAME));
 
 require_once dirname(dirname(__FILE__)) . '/config.core.php';
@@ -20,24 +20,24 @@ $modx->setLogTarget(XPDO_CLI_MODE ? 'ECHO' : 'HTML');
 $root = dirname(dirname(__FILE__)).'/';
 $sources = array(
     'root' => $root,
-    'core' => $root.'core/components/commerce_clickcollect/',
-    'model' => $root.'core/components/commerce_clickcollect/model/',
-    'assets' => $root.'assets/components/commerce_clickcollect/',
-    'schema' => $root.'core/components/commerce_clickcollect/model/schema/',
+    'core' => $root.'core/components/commerce_timeslots/',
+    'model' => $root.'core/components/commerce_timeslots/model/',
+    'assets' => $root.'assets/components/commerce_timeslots/',
+    'schema' => $root.'core/components/commerce_timeslots/model/schema/',
 );
 $manager= $modx->getManager();
 $generator= $manager->getGenerator();
 $generator->classTemplate= <<<EOD
 <?php
 /**
- * ClickCollect for Commerce.
+ * TimeSlots for Commerce.
  *
  * Copyright 2021 by Mark Hamstra <support@modmore.com>
  *
  * This file is meant to be used with Commerce by modmore. A valid Commerce license is required.
  *
- * @package commerce_clickcollect
- * @license See core/components/commerce_clickcollect/docs/license.txt
+ * @package commerce_timeslots
+ * @license See core/components/commerce_timeslots/docs/license.txt
  */
 class [+class+] extends [+extends+]
 {
@@ -49,14 +49,14 @@ EOD;
 <?php
 require_once strtr(realpath(dirname(dirname(__FILE__))), '\\\\', '/') . '/[+class-lowercase+].class.php';
 /**
- * ClickCollect for Commerce.
+ * TimeSlots for Commerce.
  *
  * Copyright 2021 by Mark Hamstra <support@modmore.com>
  *
  * This file is meant to be used with Commerce by modmore. A valid Commerce license is required.
  *
- * @package commerce_clickcollect
- * @license See core/components/commerce_clickcollect/docs/license.txt
+ * @package commerce_timeslots
+ * @license See core/components/commerce_timeslots/docs/license.txt
  */
 class [+class+]_[+platform+] extends [+class+]
 {
@@ -67,19 +67,19 @@ EOD;
     $generator->mapHeader= <<<EOD
 <?php
 /**
- * ClickCollect for Commerce.
+ * TimeSlots for Commerce.
  *
  * Copyright 2021 by Mark Hamstra <support@modmore.com>
  *
  * This file is meant to be used with Commerce by modmore. A valid Commerce license is required.
  *
- * @package commerce_clickcollect
- * @license See core/components/commerce_clickcollect/docs/license.txt
+ * @package commerce_timeslots
+ * @license See core/components/commerce_timeslots/docs/license.txt
  */
 
 EOD;
 
-$generator->parseSchema($sources['schema'] . 'commerce_clickcollect.mysql.schema.xml', $sources['model']);
+$generator->parseSchema($sources['schema'] . 'commerce_timeslots.mysql.schema.xml', $sources['model']);
 
 
 $mtime= microtime();

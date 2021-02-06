@@ -20,51 +20,51 @@ $modx->setLogTarget('HTML');
 
 /* Namespace */
 if (!createObject('modNamespace',array(
-    'name' => 'commerce_clickcollect',
-    'path' => $componentPath.'/core/components/commerce_clickcollect/',
-    'assets_path' => $componentPath.'/assets/components/commerce_clickcollect/',
+    'name' => 'commerce_timeslots',
+    'path' => $componentPath.'/core/components/commerce_timeslots/',
+    'assets_path' => $componentPath.'/assets/components/commerce_timeslots/',
 ),'name', false)) {
-    echo "Error creating namespace commerce_clickcollect.\n";
+    echo "Error creating namespace commerce_timeslots.\n";
 }
 
 /* Path settings */
 if (!createObject('modSystemSetting', array(
-    'key' => 'commerce_clickcollect.core_path',
-    'value' => $componentPath.'/core/components/commerce_clickcollect/',
+    'key' => 'commerce_timeslots.core_path',
+    'value' => $componentPath.'/core/components/commerce_timeslots/',
     'xtype' => 'textfield',
-    'namespace' => 'commerce_clickcollect',
+    'namespace' => 'commerce_timeslots',
     'area' => 'Paths',
     'editedon' => time(),
 ), 'key', false)) {
-    echo "Error creating commerce_clickcollect.core_path setting.\n";
+    echo "Error creating commerce_timeslots.core_path setting.\n";
 }
 
 if (!createObject('modSystemSetting', array(
-    'key' => 'commerce_clickcollect.assets_path',
-    'value' => $componentPath.'/assets/components/commerce_clickcollect/',
+    'key' => 'commerce_timeslots.assets_path',
+    'value' => $componentPath.'/assets/components/commerce_timeslots/',
     'xtype' => 'textfield',
-    'namespace' => 'commerce_clickcollect',
+    'namespace' => 'commerce_timeslots',
     'area' => 'Paths',
     'editedon' => time(),
 ), 'key', false)) {
-    echo "Error creating commerce_clickcollect.assets_path setting.\n";
+    echo "Error creating commerce_timeslots.assets_path setting.\n";
 }
 
 /* Fetch assets url */
 $requestUri = $_SERVER['REQUEST_URI'] ?: __DIR__ . '/_bootstrap/index.php';
 $bootstrapPos = strpos($requestUri, '_bootstrap/');
 $requestUri = rtrim(substr($requestUri, 0, $bootstrapPos), '/').'/';
-$assetsUrl = "{$requestUri}assets/components/commerce_clickcollect/";
+$assetsUrl = "{$requestUri}assets/components/commerce_timeslots/";
 
 if (!createObject('modSystemSetting', array(
-    'key' => 'commerce_clickcollect.assets_url',
+    'key' => 'commerce_timeslots.assets_url',
     'value' => $assetsUrl,
     'xtype' => 'textfield',
-    'namespace' => 'commerce_clickcollect',
+    'namespace' => 'commerce_timeslots',
     'area' => 'Paths',
     'editedon' => time(),
 ), 'key', false)) {
-    echo "Error creating commerce_clickcollect.assets_url setting.\n";
+    echo "Error creating commerce_timeslots.assets_url setting.\n";
 }
 
 
@@ -78,14 +78,14 @@ if (!createObject('modSystemSetting', array(
 //    else $xtype = 'textfield';
 //
 //    if (!createObject('modSystemSetting', array(
-//        'key' => 'commerce_clickcollect.' . $key,
+//        'key' => 'commerce_timeslots.' . $key,
 //        'value' => $opts['value'],
 //        'xtype' => $xtype,
-//        'namespace' => 'commerce_clickcollect',
+//        'namespace' => 'commerce_timeslots',
 //        'area' => $opts['area'],
 //        'editedon' => time(),
 //    ), 'key', false)) {
-//        echo "Error creating commerce_clickcollect.".$key." setting.\n";
+//        echo "Error creating commerce_timeslots.".$key." setting.\n";
 //    }
 //}
 
@@ -99,18 +99,18 @@ if (!($commerce instanceof Commerce)) {
 }
 
 // Make sure our module can be loaded. In this case we're using a composer-provided PSR4 autoloader.
-include $componentPath . '/core/components/commerce_clickcollect/vendor/autoload.php';
+include $componentPath . '/core/components/commerce_timeslots/vendor/autoload.php';
 
 // Grab the path to our namespaced files
-$modulePath = $componentPath . '/core/components/commerce_clickcollect/src/Modules/';
+$modulePath = $componentPath . '/core/components/commerce_timeslots/src/Modules/';
 
 // Instruct Commerce to load modules from our directory, providing the base namespace and module path twice
-$commerce->loadModulesFromDirectory($modulePath, 'modmore\\Commerce_ClickCollect\\Modules\\', $modulePath);
+$commerce->loadModulesFromDirectory($modulePath, 'modmore\\Commerce_TimeSlots\\Modules\\', $modulePath);
 
 // Load our xPDO package
-$root = $componentPath.'/core/components/commerce_clickcollect/';
+$root = $componentPath.'/core/components/commerce_timeslots/';
 $path = $root . '/model/';
-if (!$modx->addPackage('commerce_clickcollect', $path)) {
+if (!$modx->addPackage('commerce_timeslots', $path)) {
     echo "Failed loading xPDO package - is the path correct?\n";
 }
 
@@ -118,24 +118,24 @@ if (!$modx->addPackage('commerce_clickcollect', $path)) {
 $manager = $modx->getManager();
 
 $containers = [
-    clcoDate::class,
-    clcoDateSlot::class,
-    clcoSchedule::class,
-    clcoScheduleSlot::class,
+    ctsDate::class,
+    ctsDateSlot::class,
+    ctsSchedule::class,
+    ctsScheduleSlot::class,
 ];
 
 foreach ($containers as $container) {
     $manager->createObjectContainer($container);
 }
 
-$manager->addIndex(clcoDate::class, 'for_date');
-$manager->addIndex(clcoDate::class, 'schedule');
+$manager->addIndex(ctsDate::class, 'for_date');
+$manager->addIndex(ctsDate::class, 'schedule');
 
-$manager->addField(clcoDateSlot::class, 'shipping_method', ['after' => 'base_slot']);
-$manager->addIndex(clcoDateSlot::class, 'shipping_method');
-$manager->addIndex(clcoDateSlot::class, 'for_date');
-$manager->addField(clcoDateSlot::class, 'price', ['after' => 'available_reservations']);
-$manager->addField(clcoScheduleSlot::class, 'price', ['after' => 'max_reservations']);
+$manager->addField(ctsDateSlot::class, 'shipping_method', ['after' => 'base_slot']);
+$manager->addIndex(ctsDateSlot::class, 'shipping_method');
+$manager->addIndex(ctsDateSlot::class, 'for_date');
+$manager->addField(ctsDateSlot::class, 'price', ['after' => 'available_reservations']);
+$manager->addField(ctsScheduleSlot::class, 'price', ['after' => 'max_reservations']);
 
 // Clear the cache
 $modx->cacheManager->refresh();

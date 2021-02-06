@@ -1,0 +1,82 @@
+<div class="c-payment-method-options__container">
+    <ul class="c-payment-method-options">
+        {# The filter here makes sure only dates that have at least one available are shown.
+            If desired, you could remove the filter(..) and show availability differently
+        #}
+        {% for date, dateInfo in options|filter(v => v.available_slots > 0) %}
+            <li class="c-payment-method-option">
+                <input
+                        type="radio"
+                        name="shipment_details[{{ shipment.id }}][date]"
+                        value="{{ date }}"
+                        class="c-payment-method-option__input"
+                        id="c-cnc-{{ shipment.id }}-{{ method.id }}-date-{{ date }}"
+                        {% if selected_date == date %}checked="checked"{% endif %}
+                >
+                <label class="c-payment-method-option__label" for="c-cnc-{{ shipment.id }}-{{ method.id }}-date-{{ date }}">
+{#                    <img class="c-payment-method-option__image" src="{{ method.image.svg }}" alt="{{ method.description }}">#}
+
+                    <span style="position: absolute; top: 0.5em; right: 0.7em; background: #fff; padding: 0.25em; border-radius: 5px;">
+                        {{ lex('commerce_timeslots.num_available_slots', { num: dateInfo.available_slots }) }}
+                    </span>
+                    <span class="c-payment-method-option__name">
+                        {{ dateInfo.locale_day|default('unknown day') }} {{ dateInfo.locale_date_preferred }}
+                    </span>
+                </label>
+
+                <div class="c-payment-method-issuers__container">
+                    <ul class="c-payment-method-issuers">
+                        {% if not dateInfo.locale_day %}
+                        {{ dump(date, dateInfo) }}
+                        {% endif %}
+
+                        {% for slot in dateInfo.slots|filter(v => v.available) %}
+                            <li class="c-payment-method-issuer">
+                                <input
+                                        type="radio"
+                                        name="shipment_details[{{ shipment.id }}][slot]"
+                                        value="{{ slot.id }}"
+                                        class="c-payment-method-issuer__input"
+                                        id="c-cnc-{{ shipment.id }}-{{ method.id }}-slot-{{ slot.id }}"
+                                        {% if selected_slot == slot.id %}checked="checked"{% endif %}
+                                        {% if not slot.available %}disabled="disabled"{% endif %}
+                                >
+                                <label class="c-payment-method-issuer__label" for="c-cnc-{{ shipment.id }}-{{ method.id }}-slot-{{ slot.id }}">
+{#                                    <img class="c-payment-method-issuer__image" src="{{ issuer.image.svg }}" alt="{{ issuer.name }}">#}
+                                    {% if (slot.price + method.price) != 0 %}
+                                        <span style="position: absolute; top: 0.25em; right: 0.7em; background: #fff; padding: 0.25em; border-radius: 5px; font-weight: normal">
+                                            {{ (method.price + slot.price)|format_currency }}
+                                        </span>
+                                    {% endif %}
+                                    <span class="c-payment-method-issuer__name">
+                                        {{ slot.time_from|date('H:i') }}&ndash;{{ slot.time_until|date('H:i') }} {{ dateInfo.locale_date_tz }}
+
+                                        {# If you'd like to show all slots, even those that are not available anymore,
+                                            you could do something like this to give those slots a label after removing
+                                            the |filter(..) on the for loop at line 29
+
+                                            {% if not slot.available %}
+                                                {{ lex('commerce_timeslots.slot_unavailable') }}
+                                            {% endif %}
+                                        #}
+                                    </span>
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </li>
+        {% else %}
+            <li>
+                <div class="c-cart-error">
+                    {{ lex('commerce_timeslots.no_options_available') }}
+                </div>
+
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{#{{ dump(shipment) }}#}
+{#{{ dump(options['2021-02-05']) }}#}
