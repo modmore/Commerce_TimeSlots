@@ -54,21 +54,50 @@ class ClickCollectShippingMethod extends comShippingMethod
     public function setShippingInformation(comOrder $order, comOrderShipment $shipment, array $data)
     {
         $options = $this->getAvailableSlots();
-        $selectedDateSlots = reset($options);
+
+        $datesWithAvailability = array_filter($options, static function ($v) { return $v['available_slots'] > 0; });
+        $selectedDateInfo = $firstAvailableDate = reset($datesWithAvailability) ?? [];
+        $selectedDateSlots = is_array($firstAvailableDate) && is_array($firstAvailableDate['slots']) && count($firstAvailableDate['slots']) >= 1
+            ? $firstAvailableDate['slots'] : [];
+        $autoSelected = false;
+
+        // Check for a submitted date
         if (array_key_exists('date', $data) && array_key_exists($data['date'], $options)) {
             $selectedDate = $data['date'];
+            $selectedDateInfo = $options[$selectedDate];
             $selectedDateSlots = $options[$selectedDate]['slots'];
             $shipment->setProperty('clickcollect_date', $selectedDate);
             $shipment->unsetProperty('clickcollect_slot');
         }
 
+        // Check for a submitted slot on said day
         if (array_key_exists('slot', $data)
             && array_key_exists((int)$data['slot'], $selectedDateSlots)
             && $selectedDateSlots[(int)$data['slot']]['available']
         ) {
             $selectedSlot = $data['slot'];
             $selectedSlotInfo = $selectedDateSlots[$selectedSlot];
-            $shipment->setProperty('clickcollect_slot', $selectedSlotInfo);
+        }
+        // Check for any slots available on the selectedDate (which may be a preselected date with availability)
+        elseif (is_array($selectedDateSlots) && count($selectedDateSlots) >= 1) {
+            $slotsForDateWithAvailability = array_filter($selectedDateSlots, static function($v) { return $v['available']; } );
+            if (count($slotsForDateWithAvailability) > 0) {
+                $autoSelected = true;
+                $selectedSlotInfo = reset($slotsForDateWithAvailability);
+                $selectedSlot = $selectedSlotInfo['id'];
+            }
+        }
+
+        // If a slot was found and seems valid, save it on the shipment
+        if (isset($selectedSlot, $selectedSlotInfo) && $selectedSlot > 0 && is_array($selectedSlotInfo)) {
+            $shipment->setProperty('clickcollect_slot', $selectedSlot);
+            $shipment->setProperty('clickcollect_slot_info', $selectedSlotInfo);
+            $shipment->setProperty('clickcollect_slot_autoselected', $autoSelected);
+
+            if (is_array($selectedDateInfo)) {
+                unset($selectedDateInfo['slots']);
+                $shipment->setProperty('clickcollect_date_info', $selectedDateInfo);
+            }
             $shipment->set('tracking_reference', $selectedSlotInfo['date_for_date']
                 . ' ' . date('H:i', $selectedSlotInfo['time_from'])
                 . '-' . date('H:i', $selectedSlotInfo['time_until'])
