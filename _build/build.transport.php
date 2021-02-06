@@ -24,7 +24,7 @@ if (!defined('MOREPROVIDER_BUILD')) {
     define('PKG_NAME', 'Commerce_TimeSlots');
     define('PKG_NAMESPACE', 'commerce_timeslots');
     define('PKG_VERSION', '1.0.0');
-    define('PKG_RELEASE', 'rc1');
+    define('PKG_RELEASE', 'rc2');
 
     /* load modx */
     require_once dirname(__DIR__) . '/config.core.php';
@@ -83,7 +83,11 @@ $builder->package->put(
             array(
                 'type' => 'php',
                 'source' => $sources['resolvers'] . 'loadmodules.resolver.php',
-            )
+            ),
+            array(
+                'type' => 'php',
+                'source' => $sources['resolvers'] . 'tables.resolver.php',
+            ),
         )
     ]
 );
