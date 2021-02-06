@@ -1,6 +1,10 @@
 <?php
 
 $xpdo_meta_map = array (
+  'comStatusChangeAction' => 
+  array (
+    0 => 'ReserveTimeSlotStatusChangeAction',
+  ),
   'comShippingMethod' => 
   array (
     0 => 'TimeSlotsShippingMethod',

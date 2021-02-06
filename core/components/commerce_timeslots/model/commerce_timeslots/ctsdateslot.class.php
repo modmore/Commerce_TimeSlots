@@ -26,9 +26,17 @@ class ctsDateSlot extends comSimpleObject
 
     public function setFieldValueMax_reservations($value)
     {
-        // @todo Replace this with proper count() of used reservations for accurate accounting
-        $this->set('available_reservations', $value - ($this->get('max_reservations') - $this->get('available_reservations')));
         $this->set('max_reservations', $value);
+        $this->updateCount();
     }
 
+    public function updateCount()
+    {
+        $this->set('placed_reservations', $this->adapter->getCount(ctsOrderSlot::class, [
+            'slot' => $this->get('id'),
+        ]));
+
+        $this->set('available_reservations', $this->get('max_reservations') - $this->get('placed_reservations'));
+        $this->save();
+    }
 }

@@ -19,12 +19,8 @@
                     {{ slot.closes_after|date('H:i') }}
                 </span>
                 |
-                {% if slot.max_reservations == -1 %}
-                    {{ lex('commerce_timeslots.unlimited_reservations_available') }}
-                {% else %}
-                    <span style="font-weight: 500">{{ slot.available_reservations }}</span>/{{ slot.max_reservations }}
-                    {{ lex('commerce_timeslots.reservations_available') }}
-                {% endif %}
+                <span style="font-weight: 500">{{ slot.placed_reservations }}</span>/{% if slot.max_reservations == -1 %}&infin;{% else %}{{ slot.max_reservations }}{% endif %}
+                {{ lex('commerce_timeslots.reservations_placed') }}
                 {% if slot.price != 0 %}
                     |
                     {{ slot.price_formatted }}

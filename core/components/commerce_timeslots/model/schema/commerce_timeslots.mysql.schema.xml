@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model package="commerce_timeslots" baseClass="comSimpleObject" platform="mysql" defaultEngine="InnoDB" version="1.1">
-<!-- @todo   <object class="TimeSlotsStatusChangeAction" extends="comStatusChangeAction" />-->
+    <object class="ReserveTimeSlotStatusChangeAction" extends="comStatusChangeAction" />
     <object class="TimeSlotsShippingMethod" extends="comShippingMethod" />
 
     <object class="ctsSchedule" table="commext_timeslots_schedule">
@@ -55,6 +55,7 @@
         <field key="time_until" formatter="datetime" dbtype="int" precision="20" phptype="int" default="0" />
         <field key="closes_after" formatter="datetime" dbtype="int" precision="20" phptype="int" default="0" />
         <field key="max_reservations" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+        <field key="placed_reservations" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
         <field key="available_reservations" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
         <field key="price" formatter="financial" dbtype="int" precision="20" phptype="integer" null="false" default="0" />
 
@@ -84,6 +85,9 @@
         </index>
         <index alias="max_reservations" name="max_reservations" primary="false" unique="false" type="BTREE">
             <column key="max_reservations" length="" collation="A" null="false" />
+        </index>
+        <index alias="placed_reservations" name="placed_reservations" primary="false" unique="false" type="BTREE">
+            <column key="placed_reservations" length="" collation="A" null="false" />
         </index>
         <index alias="available_reservations" name="available_reservations" primary="false" unique="false" type="BTREE">
             <column key="available_reservations" length="" collation="A" null="false" />

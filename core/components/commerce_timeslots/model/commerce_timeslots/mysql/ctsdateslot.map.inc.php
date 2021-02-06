@@ -28,6 +28,7 @@ $xpdo_meta_map['ctsDateSlot']= array (
     'time_until' => 0,
     'closes_after' => 0,
     'max_reservations' => 0,
+    'placed_reservations' => 0,
     'available_reservations' => 0,
     'price' => 0,
   ),
@@ -90,6 +91,14 @@ $xpdo_meta_map['ctsDateSlot']= array (
       'default' => 0,
     ),
     'max_reservations' => 
+    array (
+      'dbtype' => 'int',
+      'precision' => '10',
+      'phptype' => 'integer',
+      'null' => false,
+      'default' => 0,
+    ),
+    'placed_reservations' => 
     array (
       'dbtype' => 'int',
       'precision' => '10',

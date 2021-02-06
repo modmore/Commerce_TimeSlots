@@ -1,5 +1,4 @@
 <?php
-
 $_lang['commerce_timeslots'] = 'Time Slots';
 $_lang['commerce_timeslots.description'] = 'Adds a timeslot based shipping method to Commerce, as well as new sections in the dashboard for the merchant to manage their planning and incoming orders. Useful for "Click & Collect" as well as timed-delivery use cases.';
 
@@ -39,6 +38,7 @@ $_lang['commerce_timeslots.unavailable'] = 'Unavailable';
 $_lang['commerce_timeslots.today'] = 'Today';
 $_lang['commerce_timeslots.unlimited_reservations_available'] = 'unlimited reservations';
 $_lang['commerce_timeslots.reservations_available'] = 'reservations available';
+$_lang['commerce_timeslots.reservations_placed'] = 'slots booked';
 $_lang['commerce_timeslots.no_date_slots'] = 'No slots defined, date not available for customers.';
 $_lang['commerce_timeslots.different_schedule'] = 'This slot is not part of the schedule selected for the current date. It may have been manually added or was left over after replacing the schedule.';
 
@@ -50,3 +50,6 @@ $_lang['commerce_timeslots.no_options_available'] = 'Unfortunately there are no 
 $_lang['commerce_timeslots.num_available_slots'] = '[[+num]] available slots';
 $_lang['commerce_timeslots.selected_slot_no_longer_available'] = 'The time slot you selected for delivery or pickup is unfortunately no longer available. Please choose a new time slot to complete your order.';
 $_lang['commerce_timeslots.select_a_slot'] = 'Please select a time slot before completing your order.';
+
+$_lang['commerce.add_ReserveTimeSlotStatusChangeAction'] = 'Reserve Time Slot';
+$_lang['commerce.ReserveTimeSlotStatusChangeAction'] = 'Reserve Time Slot';

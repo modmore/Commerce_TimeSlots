@@ -120,6 +120,7 @@ $manager = $modx->getManager();
 $containers = [
     ctsDate::class,
     ctsDateSlot::class,
+    ctsOrderSlot::class,
     ctsSchedule::class,
     ctsScheduleSlot::class,
 ];
@@ -136,6 +137,8 @@ $manager->addIndex(ctsDateSlot::class, 'shipping_method');
 $manager->addIndex(ctsDateSlot::class, 'for_date');
 $manager->addField(ctsDateSlot::class, 'price', ['after' => 'available_reservations']);
 $manager->addField(ctsScheduleSlot::class, 'price', ['after' => 'max_reservations']);
+$manager->addField(ctsDateSlot::class, 'placed_reservations', ['after' => 'max_reservations']);
+$manager->addIndex(ctsDateSlot::class, 'placed_reservations');
 
 // Clear the cache
 $modx->cacheManager->refresh();
