@@ -140,8 +140,6 @@ class TimeSlotsShippingMethod extends comShippingMethod
             ];
             $current->add(new DateInterval('P1D'));
         }
-        
-        var_dump($days);
 
         $c = $this->adapter->newQuery(ctsDateSlot::class);
         $c->innerJoin(ctsDate::class, 'Date');
@@ -154,8 +152,6 @@ class TimeSlotsShippingMethod extends comShippingMethod
         $c->sortby('time_from');
         $c->sortby('time_until');
         $c->sortby('Date.for_date');
-        $c->prepare();
-        echo $c->toSQL();
 
         /** @var ctsDateSlot $slot */
         foreach ($this->adapter->getIterator(ctsDateSlot::class, $c) as $slot) {
