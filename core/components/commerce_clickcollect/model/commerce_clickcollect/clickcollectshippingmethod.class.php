@@ -41,7 +41,7 @@ class ClickCollectShippingMethod extends comShippingMethod
             'order' => $order->toArray(),
             'options' => $options,
             'selected_date' => $shipment->getProperty('clickcollect_date', $defaultDate),
-            'selected_slot' => $shipment->getProperty('clickcollect_slot', []),
+            'selected_slot' => $shipment->getProperty('clickcollect_slot', 0),
         ]);
     }
 

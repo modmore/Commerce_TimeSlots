@@ -34,7 +34,7 @@
                                         value="{{ slot.id }}"
                                         class="c-payment-method-issuer__input"
                                         id="c-cnc-{{ shipment.id }}-date-{{ slot.id }}"
-                                        {% if selected_slot.id and selected_slot.id == slot.id %}checked="checked"{% endif %}
+                                        {% if selected_slot == slot.id %}checked="checked"{% endif %}
                                         {% if not slot.available %}disabled="disabled"{% endif %}
                                 >
                                 <label class="c-payment-method-issuer__label" for="c-cnc-{{ shipment.id }}-date-{{ slot.id }}">
