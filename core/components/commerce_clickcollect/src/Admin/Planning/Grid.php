@@ -10,6 +10,24 @@ class Grid extends GridWidget {
     public $key = 'clickcollect-planning-grid';
     public $title = '';
     public $defaultSort = 'for_date';
+    /**
+     * @var \comShippingMethod
+     */
+    protected $method;
+
+    public function generate(array $options = [])
+    {
+        $this->method = $this->adapter->getObject('comShippingMethod', [
+            'id' => (int)$this->getOption('method'),
+            'removed' => false,
+            'class_key' => \ClickCollectShippingMethod::class,
+        ]);
+        if (!($this->method instanceof \comShippingMethod)) {
+            throw new \RuntimeException('Method not provided.');
+        }
+
+        return parent::generate($options);
+    }
 
     public function getItems(array $options = array())
     {
@@ -55,7 +73,10 @@ class Grid extends GridWidget {
     public function prepareItem(\clcoDate $date)
     {
         $item = $date->toArray();
-        $editLink = $this->adapter->makeAdminUrl('clickcollect/planning/edit', ['id' => $date->get('id')]);
+        $editLink = $this->adapter->makeAdminUrl('clickcollect/planning/edit', [
+            'id' => $date->get('id'),
+            'method' => $this->method->get('id'),
+        ]);
         $item['edit_link'] = $editLink;
 
         $item['for_date'] = strftime('%x', strtotime($date->get('for_date') . ' 12:00:00'));
@@ -79,7 +100,8 @@ class Grid extends GridWidget {
 
         $c = $this->adapter->newQuery(\clcoDateSlot::class);
         $c->where([
-            'for_date' => $date->get('id')
+            'for_date' => $date->get('id'),
+            'shipping_method' => $this->method->get('id'),
         ]);
         $c->sortby('time_from', 'ASC');
         $c->sortby('time_until', 'ASC');

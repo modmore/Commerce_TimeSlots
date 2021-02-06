@@ -10,10 +10,10 @@
                         name="shipment_details[{{ shipment.id }}][date]"
                         value="{{ date }}"
                         class="c-payment-method-option__input"
-                        id="c-cnc-{{ shipment.id }}-date-{{ date }}"
+                        id="c-cnc-{{ shipment.id }}-{{ method.id }}-date-{{ date }}"
                         {% if loop.first or selected_date == date%}checked="checked"{% endif %}
                 >
-                <label class="c-payment-method-option__label" for="c-cnc-{{ shipment.id }}-date-{{ date }}">
+                <label class="c-payment-method-option__label" for="c-cnc-{{ shipment.id }}-{{ method.id }}-date-{{ date }}">
 {#                    <img class="c-payment-method-option__image" src="{{ method.image.svg }}" alt="{{ method.description }}">#}
 
                     <span style="position: absolute; top: 0.5em; right: 0.7em; background: #fff; padding: 0.25em; border-radius: 5px;">
@@ -33,17 +33,18 @@
                                         name="shipment_details[{{ shipment.id }}][slot]"
                                         value="{{ slot.id }}"
                                         class="c-payment-method-issuer__input"
-                                        id="c-cnc-{{ shipment.id }}-date-{{ slot.id }}"
+                                        id="c-cnc-{{ shipment.id }}-{{ method.id }}-slot-{{ slot.id }}"
                                         {% if selected_slot == slot.id %}checked="checked"{% endif %}
                                         {% if not slot.available %}disabled="disabled"{% endif %}
                                 >
-                                <label class="c-payment-method-issuer__label" for="c-cnc-{{ shipment.id }}-date-{{ slot.id }}">
+                                <label class="c-payment-method-issuer__label" for="c-cnc-{{ shipment.id }}-{{ method.id }}-slot-{{ slot.id }}">
 {#                                    <img class="c-payment-method-issuer__image" src="{{ issuer.image.svg }}" alt="{{ issuer.name }}">#}
                                     <span class="c-payment-method-issuer__name">
                                         {{ slot.time_from|date('H:i') }}&ndash;{{ slot.time_until|date('H:i') }} {{ dateInfo.locale_date_tz }}
 
                                         {# If you'd like to show all slots, even those that are not available anymore,
-                                            you could do something like this to give those slots a label
+                                            you could do something like this to give those slots a label after removing
+                                            the |filter(..) on the for loop at line 29
 
                                             {% if not slot.available %}
                                                 {{ lex('commerce_clickcollect.slot_unavailable') }}

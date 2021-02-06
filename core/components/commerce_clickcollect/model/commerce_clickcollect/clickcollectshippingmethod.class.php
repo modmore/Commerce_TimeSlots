@@ -14,6 +14,11 @@ use modmore\Commerce\Admin\Widgets\Form\NumberField;
  */
 class ClickCollectShippingMethod extends comShippingMethod
 {
+    /**
+     * @var array
+     */
+    private $_available_options;
+
     public function getModelFields()
     {
         $fields = parent::getModelFields();
@@ -39,6 +44,7 @@ class ClickCollectShippingMethod extends comShippingMethod
         return $this->commerce->view()->render('clickcollect/frontend/shipping_form.twig', [
             'shipment' => $shipment->toArray(),
             'order' => $order->toArray(),
+            'method' => $this->toArray(),
             'options' => $options,
             'selected_date' => $shipment->getProperty('clickcollect_date', $defaultDate),
             'selected_slot' => $shipment->getProperty('clickcollect_slot', 0),
@@ -109,6 +115,9 @@ class ClickCollectShippingMethod extends comShippingMethod
 
     private function getAvailableSlots(): array
     {
+        if (!empty($this->_available_options)) {
+            return $this->_available_options;
+        }
         $options = [];
 
         $today = new DateTimeImmutable();
@@ -137,6 +146,7 @@ class ClickCollectShippingMethod extends comShippingMethod
         $c->select($this->adapter->getSelectColumns(clcoDateSlot::class, 'clcoDateSlot'));
         $c->select($this->adapter->getSelectColumns(clcoDate::class, 'Date', 'date_'));
         $c->where([
+            'shipping_method' => $this->get('id'),
             'Date.for_date:IN' => $days,
         ]);
         $c->sortby('time_from');
@@ -159,6 +169,8 @@ class ClickCollectShippingMethod extends comShippingMethod
 
             $options[$ta['date_for_date']]['slots'][$ta['id']] = $ta;
         }
+
+        $this->_available_options = $options;
 
         return $options;
     }

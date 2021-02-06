@@ -131,6 +131,10 @@ foreach ($containers as $container) {
 $manager->addIndex(clcoDate::class, 'for_date');
 $manager->addIndex(clcoDate::class, 'schedule');
 
+$manager->addField(clcoDateSlot::class, 'shipping_method', ['after' => 'base_slot']);
+$manager->addIndex(clcoDateSlot::class, 'shipping_method');
+$manager->addIndex(clcoDateSlot::class, 'for_date');
+
 // Clear the cache
 $modx->cacheManager->refresh();
 

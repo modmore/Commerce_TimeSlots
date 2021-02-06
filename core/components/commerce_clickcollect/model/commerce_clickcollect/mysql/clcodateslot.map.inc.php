@@ -22,6 +22,7 @@ $xpdo_meta_map['clcoDateSlot']= array (
   array (
     'for_date' => 0,
     'base_slot' => 0,
+    'shipping_method' => 0,
     'schedule' => 0,
     'time_from' => 0,
     'time_until' => 0,
@@ -40,6 +41,14 @@ $xpdo_meta_map['clcoDateSlot']= array (
       'default' => 0,
     ),
     'base_slot' => 
+    array (
+      'dbtype' => 'int',
+      'precision' => '10',
+      'phptype' => 'integer',
+      'null' => false,
+      'default' => 0,
+    ),
+    'shipping_method' => 
     array (
       'dbtype' => 'int',
       'precision' => '10',
@@ -98,6 +107,38 @@ $xpdo_meta_map['clcoDateSlot']= array (
   ),
   'indexes' => 
   array (
+    'shipping_method' => 
+    array (
+      'alias' => 'shipping_method',
+      'primary' => false,
+      'unique' => false,
+      'type' => 'BTREE',
+      'columns' => 
+      array (
+        'shipping_method' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+      ),
+    ),
+    'for_date' => 
+    array (
+      'alias' => 'for_date',
+      'primary' => false,
+      'unique' => false,
+      'type' => 'BTREE',
+      'columns' => 
+      array (
+        'for_date' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+      ),
+    ),
     'schedule' => 
     array (
       'alias' => 'schedule',
@@ -217,6 +258,14 @@ $xpdo_meta_map['clcoDateSlot']= array (
     array (
       'class' => 'clcoDate',
       'local' => 'for_date',
+      'foreign' => 'id',
+      'cardinality' => 'one',
+      'owner' => 'foreign',
+    ),
+    'ShippingMethod' => 
+    array (
+      'class' => 'comShippingMethod',
+      'local' => 'shipping_method',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',

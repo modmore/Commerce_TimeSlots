@@ -47,6 +47,7 @@
     <object class="clcoDateSlot" table="commext_clickcollect_date_slots">
         <field key="for_date" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
         <field key="base_slot" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+        <field key="shipping_method" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
 
         <field key="schedule" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
         <field key="time_from" formatter="datetime" dbtype="int" precision="20" phptype="int" default="0" />
@@ -56,7 +57,14 @@
         <field key="available_reservations" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
 
         <aggregate alias="Date" class="clcoDate" local="for_date" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="ShippingMethod" class="comShippingMethod" local="shipping_method" foreign="id" cardinality="one" owner="foreign" />
 
+        <index alias="shipping_method" name="shipping_method" primary="false" unique="false" type="BTREE">
+            <column key="shipping_method" length="" collation="A" null="false" />
+        </index>
+        <index alias="for_date" name="for_date" primary="false" unique="false" type="BTREE">
+            <column key="for_date" length="" collation="A" null="false" />
+        </index>
         <index alias="schedule" name="schedule" primary="false" unique="false" type="BTREE">
             <column key="schedule" length="" collation="A" null="false" />
         </index>

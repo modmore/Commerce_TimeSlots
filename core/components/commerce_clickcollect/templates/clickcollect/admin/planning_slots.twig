@@ -51,11 +51,7 @@
         <li class="c-status-change"><em>{{ lex('commerce_clickcollect.no_date_slots') }}</em></li>
     {% endfor %}
     <li class="c-status-change">
-        {% if schedule %}
-            <a href="{{ edit_link }}" class="commerce-ajax-modal c ui tiny icon button"><i class="icon icon-random"></i> Replace schedule</a>
-        {% else %}
-            <a href="{{ edit_link }}" class="commerce-ajax-modal c ui tiny icon button"><i class="icon icon-plus"></i> Fill from schedule</a>
-        {% endif %}
+        <a href="{{ edit_link }}" class="commerce-ajax-modal c ui tiny icon button"><i class="icon icon-plus"></i> Set slots from schedule</a>
 
         <a href="{{ add_slot_link }}" data-modal-title="{{ lex('commerce_clickcollect.add_slot') }} ({{ for_date }})" class="commerce-ajax-modal c ui tiny icon button"><i class="icon icon-plus"></i> Add slot</a>
     </li>
