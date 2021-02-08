@@ -52,6 +52,8 @@ $_lang['commerce_timeslots.num_available_slots'] = '[[+num]] available slots';
 $_lang['commerce_timeslots.selected_slot_no_longer_available'] = 'The time slot you selected for delivery or pickup is unfortunately no longer available. Please choose a new time slot to complete your order.';
 $_lang['commerce_timeslots.select_a_slot'] = 'Please select a time slot before completing your order.';
 
+$_lang['commerce.add_TimeSlotsShippingMethod'] = 'Add Time Slots Shipping Method';
+$_lang['commerce.TimeSlotsShippingMethod'] = 'Time Slots Shipping Method';
 $_lang['commerce.add_ReserveTimeSlotStatusChangeAction'] = 'Reserve Time Slot';
 $_lang['commerce.ReserveTimeSlotStatusChangeAction'] = 'Reserve Time Slot';
 
