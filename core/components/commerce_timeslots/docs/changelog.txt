@@ -1,5 +1,5 @@
-TimeSlots for Commerce 0.1.0-pl
+TimeSlots for Commerce 1.0.0-pl
 ----------------------------------
-Released on
+Released on 2021-02-09
 
 - First release
