@@ -7,8 +7,8 @@ use modmore\Commerce\Admin\Util\Column;
 use modmore\Commerce\Events\Admin\OrderActions;
 
 class Grid extends \modmore\Commerce\Admin\Orders\Grid {
-    public $defaultSort = 'received_on';
-    public $defaultSortDir = 'DESC';
+    public $defaultSort = 'slot_from';
+    public $defaultSortDir = 'ASC';
     /**
      * @var int
      */
@@ -35,6 +35,8 @@ class Grid extends \modmore\Commerce\Admin\Orders\Grid {
 
         $c = $this->adapter->newQuery('comOrderShipment');
         $c->innerJoin('comOrder', 'Order');
+        $c->innerJoin('ctsOrderSlot', 'OrderSlot', 'comOrderShipment.id = OrderSlot.shipment');
+        $c->innerJoin('ctsDateSlot', 'Slot', 'OrderSlot.slot = Slot.id');
         $c->select($this->adapter->getSelectColumns('comOrderShipment', 'comOrderShipment' ));
         $c->select($this->adapter->getSelectColumns('comOrder', 'Order', 'order_'));
         $c->where([
@@ -45,7 +47,6 @@ class Grid extends \modmore\Commerce\Admin\Orders\Grid {
 
         // Filter on the slot
         if (array_key_exists('slot', $options) && $options['slot'] > 0) {
-            $c->innerJoin('ctsOrderSlot', 'OrderSlot', 'comOrderShipment.id = OrderSlot.shipment');
             $c->where([
                 'OrderSlot.slot' => (int)$options['slot'],
             ]);
@@ -92,18 +93,22 @@ class Grid extends \modmore\Commerce\Admin\Orders\Grid {
             ]);
         }
 
-        $sortby = array_key_exists('sortby', $options) && !empty($options['sortby']) ? $this->adapter->escape($options['sortby']) : $this->defaultSort;
-        $sortdir = array_key_exists('sortdir', $options) && strtoupper($options['sortdir']) === 'ASC' ? 'ASC' : 'DESC';
-        $c->sortby($sortby, $sortdir);
-        if ($sortby === 'received_on') {
-            $c->sortby('created_on', $sortdir);
+        $sortby = array_key_exists('sortby', $options) && !empty($options['sortby'])
+            ? $this->adapter->escape($options['sortby'])
+            : $this->defaultSort;
+        $sortdir = (array_key_exists('sortdir', $options) && !empty($options['sortdir']))
+            ? (strtoupper($options['sortdir']) === 'ASC' ? 'ASC' : 'DESC')
+            : $this->defaultSortDir;
+
+        if ($sortby === 'slot_from') {
+            $c->sortby('`Slot`.`time_from`', $sortdir);
+        }
+        else {
+            $c->sortby($sortby, $sortdir);
         }
 
         $count = $this->adapter->getCount('comOrderShipment', $c);
         $this->setTotalCount($count);
-//
-//        $c->prepare();
-//        echo $c->toSQL();
 
         $c->limit($options['limit'], $options['start']);
         /** @var \comOrderShipment[] $collection */
@@ -120,6 +125,7 @@ class Grid extends \modmore\Commerce\Admin\Orders\Grid {
     {
         return [
             new Column('id', $this->adapter->lexicon('commerce.order_id'), true),
+            new Column('slot_time', $this->adapter->lexicon('commerce_timeslots.time_from'), true),
             new Column('reference', $this->adapter->lexicon('commerce.reference'), true),
             new Column('received_on', $this->adapter->lexicon('commerce.received_on'), true),
             new Column('total', $this->adapter->lexicon('commerce.total'), true),
