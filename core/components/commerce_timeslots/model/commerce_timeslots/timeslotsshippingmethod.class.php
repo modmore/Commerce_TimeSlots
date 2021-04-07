@@ -113,7 +113,7 @@ class TimeSlotsShippingMethod extends comShippingMethod
         return parent::setShippingInformation($order, $shipment, $data);
     }
 
-    private function getAvailableSlots(): array
+    public function getAvailableSlots(): array
     {
         if (!empty($this->_available_options)) {
             return $this->_available_options;
