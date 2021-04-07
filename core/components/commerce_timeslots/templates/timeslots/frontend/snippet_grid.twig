@@ -1,0 +1,61 @@
+<div class="timeslots_container">
+    <h3 title="{{ method.name }}">{{ method.name }}</h3>
+    {# The filter here makes sure only dates that have at least one available are shown.
+        If desired, you could remove the filter(..) and show availability differently
+    #}
+{% for date, dateInfo in options|filter(v => v.available_slots > 0) %}
+    <div>
+        <div>
+            <span style="background:#f1f1f1; border-radius:5px; padding:3px 6px;">
+                {{ lex('commerce_timeslots.num_available_slots', { num: dateInfo.available_slots }) }}
+            </span>
+            &nbsp;
+            <span class="c-date">
+                {{ dateInfo.locale_day|default('unknown day') }} {{ dateInfo.locale_date_preferred }}
+            </span>
+        </div>
+
+        <div class="c-timeslots">
+            <ul style="max-width: 300px;">
+                {% if not dateInfo.locale_day %}
+                    {{ dump(date, dateInfo) }}
+                {% endif %}
+
+                {% for slot in dateInfo.slots|filter(v => v.available) %}
+                    <li class="c-timeslot" style="display:flex; justify-content: space-between; padding-bottom: 8px;">
+                        <span class="c-time">
+                            {{ slot.time_from|date('H:i') }}&ndash;{{ slot.time_until|date('H:i') }} {{ dateInfo.locale_date_tz }}
+
+                            {# If you'd like to show all slots, even those that are not available anymore,
+                                you could do something like this to give those slots a label after removing
+                                the |filter(..) on the for loop at line 29
+
+                                {% if not slot.available %}
+                                    {{ lex('commerce_timeslots.slot_unavailable') }}
+                                {% endif %}
+                            #}
+                        </span>
+                        {% if (slot.price + method.price) != 0 %}
+                            <span style="background:#f1f1f1; border-radius:5px; padding:0 3px;">
+                                {{ (method.price + slot.price)|format_currency }}
+                            </span>
+                        {% endif %}
+
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+{% else %}
+    <div>
+        <div class="c-timeslots-error">
+            {{ lex('commerce_timeslots.no_options_available') }}
+        </div>
+    </div>
+{% endfor %}
+
+</div>
+
+{#{{ dump(shipment) }}#}
+{#{{ dump(options['2021-02-05']) }}#}
