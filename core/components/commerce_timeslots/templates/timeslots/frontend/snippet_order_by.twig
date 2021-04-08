@@ -1,0 +1,12 @@
+<div>
+    {{ method.name }}
+    <p>
+        {{ lex('commerce_timeslots.snippet.order_by_to_pick_up',{
+                order_by: options|first.slots|first.closes_after_formatted,
+                from: options|first.slots|first.time_from_formatted,
+                until: options|first.slots|first.time_until_formatted
+            })
+        }}
+    </p>
+</div>
+{# {{ dump(options|first) }} #}

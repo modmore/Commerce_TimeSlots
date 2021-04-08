@@ -59,3 +59,6 @@ $_lang['commerce.ReserveTimeSlotStatusChangeAction'] = 'Reserve Time Slot';
 
 $_lang['commerce_timeslots.orders'] = 'Received Orders for ';
 
+// Snippet
+$_lang['commerce_timeslots.snippet.order_by_to_pick_up'] = 'Order by [[+order_by]] to pick up at [[+from]] &ndash; [[+until]]';
+

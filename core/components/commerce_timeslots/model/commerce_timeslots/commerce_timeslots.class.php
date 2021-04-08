@@ -23,9 +23,6 @@ class Commerce_Timeslots {
     public $cache = null;
     public array $options = [];
 
-    private array $_available_options = [];
-
-
     public function __construct(modX &$modx, array $options = []) {
         $this->modx =& $modx;
         $this->namespace = $this->getOption('namespace', $options, 'commerce_timeslots');
@@ -61,13 +58,32 @@ class Commerce_Timeslots {
     }
 
     /**
-     * Renders a grid with all available timeslots for each shipping method
+     * @param $params
      * @return string
      */
-    public function getTimeslotsGrid() {
-        $shippingMethods = $this->getShippingMethods();
+    public function getTimeslots($params): string
+    {
+        // Check if a shipping method id was specified ( 0 returns all )
+        $shipId = isset($params['shipId']) ? $params['shipId'] : 0;
+
+        $shippingMethods = $this->getShippingMethods($shipId);
         if(empty($shippingMethods)) return '';
 
+        if(isset($params['orderBy'])) {
+            return $this->renderOrderBy($shippingMethods);
+        }
+        else {
+            return $this->renderGrid($shippingMethods);
+        }
+    }
+
+    /**
+     * Renders a grid with all available timeslots for each shipping method
+     * @param $shippingMethods
+     * @return string
+     */
+    public function renderGrid($shippingMethods): string
+    {
         $output = '';
         foreach($shippingMethods as $shippingMethod) {
             if(!$shippingMethod instanceof TimeSlotsShippingMethod) continue;
@@ -75,30 +91,57 @@ class Commerce_Timeslots {
             $options = $shippingMethod->getAvailableSlots();
 
             $output .= $this->commerce->view()->render('timeslots/frontend/snippet_grid.twig', [
-                'method' => $shippingMethod->toArray(),
-                'options' => $options,
+                'method'    => $shippingMethod->toArray(),
+                'options'   => $options,
             ]);
         }
         return $output;
     }
 
     /**
+     * Renders a string "Order by {datetime} to pickup/deliver at {slot time}"
+     * @param $shippingMethods
+     * @return string
+     */
+    public function renderOrderBy($shippingMethods): string
+    {
+        $output = '';
+        foreach($shippingMethods as $shippingMethod) {
+            if(!$shippingMethod instanceof TimeSlotsShippingMethod) continue;
+
+            $options = $shippingMethod->getAvailableSlots();
+            $this->modx->log(1,print_r($options,true));
+            $output .= $this->commerce->view()->render('timeslots/frontend/snippet_order_by.twig', [
+                'method'    => $shippingMethod->toArray(),
+                'options'   => $options,
+            ]);
+        }
+
+        return $output;
+    }
+
+    /**
      * Retrieves an array of TimeslotsShippingMethods
+     * @param int $id
      * @return array
      */
-    public function getShippingMethods() {
+    public function getShippingMethods(int $id) : array
+    {
         $c = $this->adapter->newQuery(TimeSlotsShippingMethod::class);
 
         $where = [];
         if ($this->commerce->isTestMode()) {
-            $where['enabled_in_test'] = true;
+            $where['enabled_in_test:='] = true;
         } else {
-            $where['enabled_in_live'] = true;
+            $where['enabled_in_live:='] = true;
         }
-        $where['class_key'] = TimeSlotsShippingMethod::class;
+        $where['AND:class_key:='] = TimeSlotsShippingMethod::class;
+        if($id > 0) {
+            $where['AND:`id`:='] = $id;
+        }
         $c->where($where);
 
-        return $this->adapter->getIterator(TimeSlotsShippingMethod::class,$c);
+        return $this->adapter->getCollection(TimeSlotsShippingMethod::class,$c);
     }
 
 
