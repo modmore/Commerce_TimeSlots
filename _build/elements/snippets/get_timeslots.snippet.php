@@ -1,5 +1,25 @@
 <?php
 /**
+ * commerce.get_timeslots
+ *
+ * Add this snippet to any MODX template to either display a grid of available timeslots, or display a notice:
+ * "Order by {date|time} to pick up at {timeslot}".
+ *
+ * This snippet currently has two parameters that can be used.
+ *
+ * - &shipId: Add a shipping id here to only display timeslots for that shipping method. If not used, timeslots for all
+ *          shipping methods will be displayed.
+ *
+ * - &orderBy: Set this value to 1 and the output of the snippet will be the "Order by" notice. Don't set it to
+ *          output the grid instead.
+ *
+ * Example usage:
+ * [[!commerce.get_timeslots?
+ *     &shipId=`4`
+ *     &orderBy=`1`
+ * ]]
+ *
+ *
  * @var modX $modx
  * @var array $scriptProperties
  */
