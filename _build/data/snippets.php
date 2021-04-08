@@ -1,7 +1,8 @@
 <?php
 return [
     'Commerce_Timeslots' => [
-        'description'  =>  '',
-        'file'  =>  'get_timeslots.snippet.php',
+        'name'          =>  'commerce.get_timeslots',
+        'description'   =>  '',
+        'file'          =>  'get_timeslots.snippet.php',
     ]
 ];

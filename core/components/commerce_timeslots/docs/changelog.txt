@@ -1,8 +1,9 @@
-TimeSlots for Commerce 1.0.1-pl
+TimeSlots for Commerce 1.1.0-pl
 ----------------------------------
 Released on 2021-
 
 - Add missing translation files
+- Add snippet to render available timeslots as either grid or "order by".
 
 TimeSlots for Commerce 1.0.0-pl
 ----------------------------------

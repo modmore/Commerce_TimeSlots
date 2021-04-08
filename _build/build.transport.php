@@ -23,8 +23,8 @@ if (!defined('MOREPROVIDER_BUILD')) {
     /* define version */
     define('PKG_NAME', 'Commerce_TimeSlots');
     define('PKG_NAMESPACE', 'commerce_timeslots');
-    define('PKG_VERSION', '1.0.0');
-    define('PKG_RELEASE', 'rc2');
+    define('PKG_VERSION', '1.1.0');
+    define('PKG_RELEASE', 'rc1');
 
     /* load modx */
     require_once dirname(__DIR__) . '/config.core.php';
@@ -38,7 +38,7 @@ if (!defined('MOREPROVIDER_BUILD')) {
 else {
     $targetDirectory = MOREPROVIDER_BUILD_TARGET;
 }
-
+echo '<pre>';
 $root = dirname(__DIR__).'/';
 $sources = [
     'root' => $root,
@@ -144,7 +144,7 @@ $snippets = [];
 foreach($snippetSource as $name => $options) {
     $snippets[$name] = $modx->newObject('modSnippet');
     $snippets[$name]->fromArray([
-        'name' => $name,
+        'name' => $options['name'],
         'description' => $options['description'],
         'snippet' => getSnippetContent($sources['snippets'].$options['file']),
     ],'',true,true);
