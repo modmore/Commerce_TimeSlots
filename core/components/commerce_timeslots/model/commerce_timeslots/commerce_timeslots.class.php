@@ -21,7 +21,7 @@ class Commerce_Timeslots {
     public $adapter = null;
     public $namespace = 'commerce_timeslots';
     public $cache = null;
-    public array $options = [];
+    public $options = [];
 
     public function __construct(modX &$modx, array $options = []) {
         $this->modx =& $modx;
@@ -58,23 +58,24 @@ class Commerce_Timeslots {
     }
 
     /**
-     * @param $params
+     * @param array $params
      * @return string
      */
-    public function getTimeslots($params): string
+    public function getTimeslots(array $params): string
     {
-        // Check if a shipping method id was specified ( 0 returns all )
-        $shipId = isset($params['shipId']) ? $params['shipId'] : 0;
+        // Check if a custom template was provided - grid template is used by default
+        $tpl = $params['tpl'];
+        if(!$tpl) {
+            $tpl = 'timeslots/frontend/snippet_grid.twig';
+        }
 
-        $shippingMethods = $this->getShippingMethods($shipId);
+        // Check if a shipping method id was specified ( 0 returns all )
+        $shippingMethodId = $params['shippingMethod'] ?? 0;
+
+        $shippingMethods = $this->getShippingMethods($shippingMethodId);
         if(empty($shippingMethods)) return '';
 
-        if(isset($params['orderBy'])) {
-            return $this->renderOrderBy($shippingMethods);
-        }
-        else {
-            return $this->renderGrid($shippingMethods);
-        }
+        return $this->render($shippingMethods, $tpl);
     }
 
     /**
@@ -82,7 +83,7 @@ class Commerce_Timeslots {
      * @param $shippingMethods
      * @return string
      */
-    public function renderGrid($shippingMethods): string
+    public function render($shippingMethods, $tpl): string
     {
         $output = '';
         foreach($shippingMethods as $shippingMethod) {
@@ -90,33 +91,11 @@ class Commerce_Timeslots {
 
             $options = $shippingMethod->getAvailableSlots();
 
-            $output .= $this->commerce->view()->render('timeslots/frontend/snippet_grid.twig', [
+            $output .= $this->commerce->view()->render($tpl, [
                 'method'    => $shippingMethod->toArray(),
                 'options'   => $options,
             ]);
         }
-        return $output;
-    }
-
-    /**
-     * Renders a string "Order by {datetime} to pickup/deliver at {slot time}"
-     * @param $shippingMethods
-     * @return string
-     */
-    public function renderOrderBy($shippingMethods): string
-    {
-        $output = '';
-        foreach($shippingMethods as $shippingMethod) {
-            if(!$shippingMethod instanceof TimeSlotsShippingMethod) continue;
-
-            $options = $shippingMethod->getAvailableSlots();
-            $this->modx->log(1,print_r($options,true));
-            $output .= $this->commerce->view()->render('timeslots/frontend/snippet_order_by.twig', [
-                'method'    => $shippingMethod->toArray(),
-                'options'   => $options,
-            ]);
-        }
-
         return $output;
     }
 

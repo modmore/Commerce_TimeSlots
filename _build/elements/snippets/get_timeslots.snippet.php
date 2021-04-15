@@ -7,16 +7,15 @@
  *
  * This snippet currently has two parameters that can be used.
  *
- * - &shipId: Add a shipping id here to only display timeslots for that shipping method. If not used, timeslots for all
+ * - &shippingMethod: Add a shipping id here to only display timeslots for that shipping method. If not used, timeslots for all
  *          shipping methods will be displayed.
  *
- * - &orderBy: Set this value to 1 and the output of the snippet will be the "Order by" notice. Don't set it to
- *          output the grid instead.
+ * - &tpl: Specify the twig template file to use. Default: timeslots/frontend/snippet_grid.twig
  *
  * Example usage:
  * [[!commerce.get_timeslots?
- *     &shipId=`4`
- *     &orderBy=`1`
+ *     &shippingMethod=`4`
+ *     &tpl=`timeslots/frontend/snippet_order_by.twig`
  * ]]
  *
  *
