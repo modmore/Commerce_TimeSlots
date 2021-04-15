@@ -18,7 +18,7 @@
  * [[!commerce.get_timeslots?
  *     &shippingMethod=`4`
  *     &tpl=`timeslots/frontend/snippet_order_by.twig`
- *     &toPlaceholder=`timeslots_grid`
+ *     &toPlaceholder=`timeslots_output`
  * ]]
  *
  *
