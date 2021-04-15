@@ -5,17 +5,20 @@
  * Add this snippet to any MODX template to either display a grid of available timeslots, or display a notice:
  * "Order by {date|time} to pick up at {timeslot}".
  *
- * This snippet currently has two parameters that can be used.
+ * This snippet currently has three parameters that can be used.
  *
  * - &shippingMethod: Add a shipping id here to only display timeslots for that shipping method. If not used, timeslots for all
  *          shipping methods will be displayed.
  *
  * - &tpl: Specify the twig template file to use. Default: timeslots/frontend/snippet_grid.twig
  *
+ * - &toPlaceholder: To have the output display via placeholder instead, specify the placeholder name you would like to use.
+ *
  * Example usage:
  * [[!commerce.get_timeslots?
  *     &shippingMethod=`4`
  *     &tpl=`timeslots/frontend/snippet_order_by.twig`
+ *     &toPlaceholder=`timeslots_grid`
  * ]]
  *
  *
@@ -38,4 +41,12 @@ if ($timeslots->commerce->isDisabled()) {
     return $timeslots->commerce->adapter->lexicon('commerce.mode.disabled.message');
 }
 
-return $timeslots->getTimeslots($scriptProperties);
+$output = $timeslots->getTimeslots($scriptProperties);
+
+if(isset($scriptProperties['toPlaceholder']) && !empty($scriptProperties['toPlaceholder'])) {
+    // Set output to placeholder using the value as the placeholder name
+    $modx->setPlaceholder($scriptProperties['toPlaceholder'],$output);
+    return '';
+}
+
+return $output;
