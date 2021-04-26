@@ -65,15 +65,15 @@ class Commerce_Timeslots {
     {
         // Check if a custom template was provided - grid template is used by default
         $tpl = $params['tpl'];
-        if(!$tpl) {
+        if (!$tpl) {
             $tpl = 'timeslots/frontend/snippet_grid.twig';
         }
 
         // Check if a shipping method id was specified ( 0 returns all )
-        $shippingMethodId = $params['shippingMethod'] ?? 0;
+        $shippingMethodId = (int) $params['shippingMethod'] ?? 0;
 
         $shippingMethods = $this->getShippingMethods($shippingMethodId);
-        if(empty($shippingMethods)) return '';
+        if (empty($shippingMethods)) return '';
 
         return $this->render($shippingMethods, $tpl);
     }
@@ -87,7 +87,7 @@ class Commerce_Timeslots {
     {
         $output = '';
         foreach($shippingMethods as $shippingMethod) {
-            if(!$shippingMethod instanceof TimeSlotsShippingMethod) continue;
+            if (!$shippingMethod instanceof TimeSlotsShippingMethod) continue;
 
             $options = $shippingMethod->getAvailableSlots();
 
@@ -115,7 +115,7 @@ class Commerce_Timeslots {
             $where['enabled_in_live:='] = true;
         }
         $where['AND:class_key:='] = TimeSlotsShippingMethod::class;
-        if($id > 0) {
+        if ($id > 0) {
             $where['AND:`id`:='] = $id;
         }
         $c->where($where);
