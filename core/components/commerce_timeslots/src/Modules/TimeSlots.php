@@ -5,6 +5,7 @@ use modmore\Commerce\Events\Admin\GeneratorEvent;
 use modmore\Commerce\Events\Admin\TopNavMenu;
 use modmore\Commerce\Events\Checkout;
 use modmore\Commerce\Modules\BaseModule;
+use modmore\Commerce\Services\Scheduler\Interval;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Create;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Delete;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Duplicate;
@@ -50,6 +51,15 @@ class TimeSlots extends BaseModule {
         $dispatcher->addListener(\Commerce::EVENT_DASHBOARD_INIT_GENERATOR, [$this, 'initGenerator']);
         $dispatcher->addListener(\Commerce::EVENT_DASHBOARD_GET_MENU, [$this, 'getMenu']);
         $dispatcher->addListener(\Commerce::EVENT_CHECKOUT_BEFORE_STEP, [$this, 'beforeCheckoutStep']);
+
+
+        // Requires the Scheduler service in Commerce 1.3+
+        $root = $this->commerce->config['core_path'];
+        $path = $root . 'src/Services/Scheduler/crontime';
+        if (file_exists($path)) {
+            // Runs at midnight each night.
+            $this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::daily(0, 0));
+        }
     }
 
     public function initGenerator(GeneratorEvent $event)
@@ -205,5 +215,11 @@ class TimeSlots extends BaseModule {
     private function insertInArray($array,$values,$offset)
     {
         return array_slice($array, 0, $offset, true) + $values + array_slice($array, $offset, NULL, true);
+    }
+
+    public static function populateDailySlots($commerce) {
+        $commerce->adapter->log(1,date('H:i:s',time()));
+
+
     }
 }
