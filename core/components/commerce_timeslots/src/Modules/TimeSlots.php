@@ -9,6 +9,7 @@ use modmore\Commerce_TimeSlots\Admin\Schedule\Create;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Delete;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Duplicate;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Overview;
+use modmore\Commerce_TimeSlots\Admin\Schedule\SetDefault;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Update;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -61,6 +62,7 @@ class TimeSlots extends BaseModule {
         $generator->addPage('timeslots/schedule/edit', Update::class);
         $generator->addPage('timeslots/schedule/delete', Delete::class);
         $generator->addPage('timeslots/schedule/duplicate', Duplicate::class);
+        $generator->addPage('timeslots/schedule/set_default', SetDefault::class);
         $generator->addPage('timeslots/schedule/slot/add', \modmore\Commerce_TimeSlots\Admin\Schedule\Slot\Create::class);
         $generator->addPage('timeslots/schedule/slot/edit', \modmore\Commerce_TimeSlots\Admin\Schedule\Slot\Update::class);
         $generator->addPage('timeslots/schedule/slot/delete', \modmore\Commerce_TimeSlots\Admin\Schedule\Slot\Delete::class);

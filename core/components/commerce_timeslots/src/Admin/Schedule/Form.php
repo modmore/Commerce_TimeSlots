@@ -35,6 +35,24 @@ class Form extends FormWidget
         if (!$this->record->isNew()) {
             return $this->adapter->makeAdminUrl('timeslots/schedule/edit', ['id' => $this->record->get('id')]);
         }
+
+        $exists = $this->adapter->getCount($this->classKey);
+        if (!$exists) {
+            return $this->adapter->makeAdminUrl('timeslots/schedule/add', [
+                'is_first' => 1
+            ]);
+        }
+
         return $this->adapter->makeAdminUrl('timeslots/schedule/add');
+    }
+
+    public function afterSave()
+    {
+        if ($this->getOption('is_first')) {
+            $this->record->set('default', 1);
+            $this->record->save();
+        }
+
+        return true;
     }
 }

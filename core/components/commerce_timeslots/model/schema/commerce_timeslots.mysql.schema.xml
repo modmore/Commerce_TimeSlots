@@ -5,6 +5,11 @@
 
     <object class="ctsSchedule" table="commext_timeslots_schedule">
         <field key="name" dbtype="varchar" precision="190" phptype="string" null="false" default="" />
+        <field key="default" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+
+        <index alias="default" name="default" primary="false" unique="false" type="BTREE">
+            <column key="default" length="" collation="A" null="false" />
+        </index>
 
         <composite alias="Slots" class="ctsScheduleSlot" local="id" foreign="schedule" cardinality="many" owner="local" />
     </object>

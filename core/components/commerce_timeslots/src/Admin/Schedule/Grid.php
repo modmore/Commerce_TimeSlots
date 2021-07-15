@@ -87,6 +87,9 @@ class Grid extends GridWidget {
         $editLink = $this->adapter->makeAdminUrl('timeslots/schedule/edit', ['id' => $schedule->get('id')]);
         $item['name'] = '<a href="' . $editLink . '" class="commerce-ajax-modal">' . $this->encode($item['name']) . '</a>';
         $item['name'] .= ' <nobr style="color: #6a6a6a;">(#' . $item['id'] . ')</nobr>';
+        if ($schedule->get('default')) {
+            $item['name'] .= '<br><span style="color: #6a6a6a; font-size: 9px;">*' . $this->adapter->lexicon('commerce_timeslots.default') . '</span>';
+        }
 
         $item['actions'] = [];
 
@@ -100,6 +103,12 @@ class Grid extends GridWidget {
             ->setUrl($duplicateLink)
             ->setTitle($this->adapter->lexicon('commerce_timeslots.duplicate_schedule'))
             ->setIcon('icon-copy');
+
+        $setDefaultLink = $this->adapter->makeAdminUrl('timeslots/schedule/set_default', ['id' => $schedule->get('id')]);
+        $item['actions'][] = (new Action())
+            ->setUrl($setDefaultLink)
+            ->setTitle($this->adapter->lexicon('commerce_timeslots.set_default_schedule'))
+            ->setIcon('icon-check');
 
         $deleteLink = $this->adapter->makeAdminUrl('timeslots/schedule/delete', ['id' => $schedule->get('id')]);
         $item['actions'][] = (new Action())

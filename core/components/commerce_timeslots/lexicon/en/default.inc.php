@@ -27,6 +27,9 @@ $_lang['commerce_timeslots.duplicate_slot'] = 'Duplicate slot';
 $_lang['commerce_timeslots.add_schedule'] = 'Add schedule';
 $_lang['commerce_timeslots.edit_schedule'] = 'Edit schedule';
 $_lang['commerce_timeslots.duplicate_schedule'] = 'Duplicate schedule';
+$_lang['commerce_timeslots.default'] = 'default';
+$_lang['commerce_timeslots.set_default_schedule'] = 'Set as Default Schedule';
+$_lang['commerce_timeslots.set_default_success'] = '[[+name]] was set as the default schedule successfully.';
 $_lang['commerce_timeslots.delete_schedule'] = 'Delete schedule and slots';
 $_lang['commerce_timeslots.delete_schedule_named'] = 'Delete schedule "[[+name]]" and associated slots';
 
