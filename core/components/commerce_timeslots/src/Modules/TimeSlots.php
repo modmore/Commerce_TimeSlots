@@ -1,6 +1,8 @@
 <?php
 namespace modmore\Commerce_TimeSlots\Modules;
 
+use DateInterval;
+use DateTime;
 use modmore\Commerce\Events\Admin\GeneratorEvent;
 use modmore\Commerce\Events\Admin\TopNavMenu;
 use modmore\Commerce\Events\Checkout;
@@ -59,6 +61,7 @@ class TimeSlots extends BaseModule {
         if (file_exists($path)) {
             // Runs at midnight each night.
             $this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::daily(0, 0));
+            //$this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::hourly('*'));
         }
     }
 
@@ -219,6 +222,17 @@ class TimeSlots extends BaseModule {
 
     public static function populateDailySlots($commerce) {
         $commerce->adapter->log(1,date('H:i:s',time()));
+
+        $c = $commerce->adapter->newQuery(\ctsDate::class);
+        $c->select($commerce->adapter->getSelectColumns(\ctsDate::class, \ctsDate::class));
+        $c->where([
+            'for_date:>=' => date('Y-m-d')
+        ]);
+
+        if (31 > $commerce->adapter->getCount(\ctsDate::class, $c)) {
+            \ctsDate::createFutureDates($commerce->adapter, true);
+        }
+
 
 
     }
