@@ -21,7 +21,8 @@ $xpdo_meta_map['ctsSchedule']= array (
   'fields' => 
   array (
     'name' => '',
-    'default' => 0,
+    'repeat' => 0,
+    'repeat_days' => NULL,
   ),
   'fieldMeta' => 
   array (
@@ -33,26 +34,32 @@ $xpdo_meta_map['ctsSchedule']= array (
       'null' => false,
       'default' => '',
     ),
-    'default' => 
+    'repeat' => 
     array (
       'dbtype' => 'tinyint',
       'precision' => '1',
-      'phptype' => 'integer',
+      'phptype' => 'boolean',
       'null' => false,
       'default' => 0,
+    ),
+    'repeat_days' => 
+    array (
+      'dbtype' => 'tinytext',
+      'phptype' => 'array',
+      'null' => false,
     ),
   ),
   'indexes' => 
   array (
-    'default' => 
+    'repeat' => 
     array (
-      'alias' => 'default',
+      'alias' => 'repeat',
       'primary' => false,
       'unique' => false,
       'type' => 'BTREE',
       'columns' => 
       array (
-        'default' => 
+        'repeat' => 
         array (
           'length' => '',
           'collation' => 'A',

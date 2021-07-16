@@ -33,5 +33,21 @@ class ctsSchedule extends comSimpleObject
         return $new;
     }
 
+    public function getRepeatDays()
+    {
+        $repeatDays = $this->get('repeat_days');
+        $repeatDays = array_values(array_filter($repeatDays));
+        if (!is_array($repeatDays)) {
+            $repeatDays = array();
+        }
+        return $repeatDays;
+    }
 
+    public function setRepeatDays($repeatDays, $merge = true)
+    {
+        if ($merge) {
+            $repeatDays = array_merge($this->getRepeatDays(), $repeatDays);
+        }
+        $this->set('repeat_days', $repeatDays);
+    }
 }

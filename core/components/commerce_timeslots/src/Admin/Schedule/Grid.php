@@ -5,6 +5,7 @@ namespace modmore\Commerce_TimeSlots\Admin\Schedule;
 use modmore\Commerce\Admin\Util\Action;
 use modmore\Commerce\Admin\Util\Column;
 use modmore\Commerce\Admin\Widgets\GridWidget;
+use modmore\Commerce_TimeSlots\Modules\TimeSlots;
 
 class Grid extends GridWidget {
     public $key = 'timeslots-schedule-grid';
@@ -87,8 +88,39 @@ class Grid extends GridWidget {
         $editLink = $this->adapter->makeAdminUrl('timeslots/schedule/edit', ['id' => $schedule->get('id')]);
         $item['name'] = '<a href="' . $editLink . '" class="commerce-ajax-modal">' . $this->encode($item['name']) . '</a>';
         $item['name'] .= ' <nobr style="color: #6a6a6a;">(#' . $item['id'] . ')</nobr>';
-        if ($schedule->get('default')) {
-            $item['name'] .= '<br><span style="color: #6a6a6a; font-size: 9px;">*' . $this->adapter->lexicon('commerce_timeslots.default') . '</span>';
+
+        // Display the days this schedule is assigned to automatically
+        if ($schedule->get('repeat')) {
+            $days = $schedule->getRepeatDays();
+            foreach ($days as $day) {
+                $name = '';
+                switch ($day) {
+                    case TimeSlots::MONDAY:
+                        $name = $this->adapter->lexicon('monday');
+                        break;
+                    case TimeSlots::TUESDAY:
+                        $name = $this->adapter->lexicon('tuesday');
+                        break;
+                    case TimeSlots::WEDNESDAY:
+                        $name = $this->adapter->lexicon('wednesday');
+                        break;
+                    case TimeSlots::THURSDAY:
+                        $name = $this->adapter->lexicon('thursday');
+                        break;
+                    case TimeSlots::FRIDAY:
+                        $name = $this->adapter->lexicon('friday');
+                        break;
+                    case TimeSlots::SATURDAY:
+                        $name = $this->adapter->lexicon('saturday');
+                        break;
+                    case TimeSlots::SUNDAY:
+                        $name = $this->adapter->lexicon('sunday');
+                        break;
+                }
+                // TODO: Make these into nice-looking styled tags
+                $item['name'] .= '<br><span style="color: #6a6a6a; font-size: 9px;">*' . $name . '</span>';
+            }
+
         }
 
         $item['actions'] = [];
@@ -98,17 +130,17 @@ class Grid extends GridWidget {
             ->setTitle($this->adapter->lexicon('commerce_timeslots.add_slot'))
             ->setIcon('icon-plus');
 
+        $setEditLink = $this->adapter->makeAdminUrl('timeslots/schedule/edit', ['id' => $schedule->get('id')]);
+        $item['actions'][] = (new Action())
+            ->setUrl($setEditLink)
+            ->setTitle($this->adapter->lexicon('commerce_timeslots.edit_schedule'))
+            ->setIcon('icon-edit');
+
         $duplicateLink = $this->adapter->makeAdminUrl('timeslots/schedule/duplicate', ['id' => $schedule->get('id')]);
         $item['actions'][] = (new Action())
             ->setUrl($duplicateLink)
             ->setTitle($this->adapter->lexicon('commerce_timeslots.duplicate_schedule'))
             ->setIcon('icon-copy');
-
-        $setDefaultLink = $this->adapter->makeAdminUrl('timeslots/schedule/set_default', ['id' => $schedule->get('id')]);
-        $item['actions'][] = (new Action())
-            ->setUrl($setDefaultLink)
-            ->setTitle($this->adapter->lexicon('commerce_timeslots.set_default_schedule'))
-            ->setIcon('icon-check');
 
         $deleteLink = $this->adapter->makeAdminUrl('timeslots/schedule/delete', ['id' => $schedule->get('id')]);
         $item['actions'][] = (new Action())

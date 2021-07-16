@@ -27,9 +27,11 @@ $_lang['commerce_timeslots.duplicate_slot'] = 'Duplicate slot';
 $_lang['commerce_timeslots.add_schedule'] = 'Add schedule';
 $_lang['commerce_timeslots.edit_schedule'] = 'Edit schedule';
 $_lang['commerce_timeslots.duplicate_schedule'] = 'Duplicate schedule';
-$_lang['commerce_timeslots.default'] = 'default';
-$_lang['commerce_timeslots.set_default_schedule'] = 'Set as Default Schedule';
-$_lang['commerce_timeslots.set_default_success'] = '[[+name]] was set as the default schedule successfully.';
+$_lang['commerce_timeslots.repeat'] = 'Repeat';
+$_lang['commerce_timeslots.start_repeating'] = 'Start Repeating';
+$_lang['commerce_timeslots.stop_repeating'] = 'Stop Repeating';
+$_lang['commerce_timeslots.schedule_days'] = 'Schedule Days';
+$_lang['commerce_timeslots.schedule_days_desc'] = 'Select days to repeat this schedule on. If a day is already assigned to another schedule, you must unassign it before the days are displayed here.';
 $_lang['commerce_timeslots.delete_schedule'] = 'Delete schedule and slots';
 $_lang['commerce_timeslots.delete_schedule_named'] = 'Delete schedule "[[+name]]" and associated slots';
 

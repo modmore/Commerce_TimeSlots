@@ -12,16 +12,10 @@ class Create extends Page {
 
     public function setUp()
     {
-        $first = false;
-        if ((int)$this->getOption('is_first') === 1) {
-            $first = true;
-        }
         $section = new SimpleSection($this->commerce, [
             'title' => $this->title
         ]);
-        $section->addWidget((new Form($this->commerce, [
-            'is_first' => $first
-        ]))->setUp());
+        $section->addWidget((new Form($this->commerce))->setUp());
         $this->addSection($section);
         return $this;
     }

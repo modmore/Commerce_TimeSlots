@@ -12,13 +12,20 @@ use modmore\Commerce_TimeSlots\Admin\Schedule\Create;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Delete;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Duplicate;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Overview;
-use modmore\Commerce_TimeSlots\Admin\Schedule\SetDefault;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Update;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 class TimeSlots extends BaseModule {
+
+    const MONDAY = 1;
+    const TUESDAY = 2;
+    const WEDNESDAY = 3;
+    const THURSDAY = 4;
+    const FRIDAY = 5;
+    const SATURDAY = 6;
+    const SUNDAY = 7;
 
     public function getName()
     {
@@ -60,7 +67,7 @@ class TimeSlots extends BaseModule {
         $path = $root . 'src/Services/Scheduler/crontime';
         if (file_exists($path)) {
             // Runs at midnight each night.
-            $this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::daily(0, 0));
+            $this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::weekly('*', 0,0));
             //$this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::hourly('*'));
         }
     }
@@ -75,7 +82,6 @@ class TimeSlots extends BaseModule {
         $generator->addPage('timeslots/schedule/edit', Update::class);
         $generator->addPage('timeslots/schedule/delete', Delete::class);
         $generator->addPage('timeslots/schedule/duplicate', Duplicate::class);
-        $generator->addPage('timeslots/schedule/set_default', SetDefault::class);
         $generator->addPage('timeslots/schedule/slot/add', \modmore\Commerce_TimeSlots\Admin\Schedule\Slot\Create::class);
         $generator->addPage('timeslots/schedule/slot/edit', \modmore\Commerce_TimeSlots\Admin\Schedule\Slot\Update::class);
         $generator->addPage('timeslots/schedule/slot/delete', \modmore\Commerce_TimeSlots\Admin\Schedule\Slot\Delete::class);
