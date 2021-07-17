@@ -66,7 +66,6 @@ class Form extends FormWidget
                 $this->record->set('repeat', false);
             }
 
-            $this->record->save();
         }
         return parent::handleSubmit($values);
     }
@@ -82,7 +81,6 @@ class Form extends FormWidget
             return trim($output,',');
         }
 
-
         return  '';
     }
 
@@ -94,6 +92,10 @@ class Form extends FormWidget
 
         // Create structure of day options
         $availableDays = [
+            [
+                'label' => $this->adapter->lexicon('sunday'),
+                'value' => TimeSlots::SUNDAY
+            ],
             [
                 'label' => $this->adapter->lexicon('monday'),
                 'value' => TimeSlots::MONDAY
@@ -117,10 +119,6 @@ class Form extends FormWidget
             [
                 'label' => $this->adapter->lexicon('saturday'),
                 'value' => TimeSlots::SATURDAY
-            ],
-            [
-                'label' => $this->adapter->lexicon('sunday'),
-                'value' => TimeSlots::SUNDAY
             ],
         ];
 
