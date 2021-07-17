@@ -30,8 +30,7 @@ class ctsDate extends comSimpleObject
                 $record = $adapter->newObject('ctsDate');
                 $record->set('for_date', $date->format('Y-m-d'));
             }
-            $adapter->log(1,$date->format('Y-m-d'));
-            $record->save();
+
 
             // Populate dates with slots from any daily assigned schedules (if run via nightly Scheduler)
             if ($scheduled) {
@@ -68,6 +67,9 @@ class ctsDate extends comSimpleObject
                     // Only add slots from the default schedule if there's not already a schedule applied
                     if ($record->get('schedule') < 1 && $assignedSchedule !== null) {
 
+                        // Save new schedule id to date
+                        $record->set('schedule', $assignedSchedule->get('id'));
+
                         // Copy slots from the schedule
                         $c = $adapter->newQuery(\ctsScheduleSlot::class);
                         $c->where([
@@ -86,8 +88,6 @@ class ctsDate extends comSimpleObject
                                 'available_reservations' => $baseSlot->get('max_reservations'),
                                 'price' => $baseSlot->get('price'),
                             ]);
-
-                            $adapter->log(1,print_r($newSlot->toArray(),true));
 
                             // Calculate the timeFrom and timeUntil using DateTime. This makes sure it uses the servers' timezone
                             // and that the appropriate offset is handled when converting to UTC.
@@ -109,7 +109,7 @@ class ctsDate extends comSimpleObject
 
             }
 
-
+            $record->save();
 
             $date->modify('+1 day');
 
