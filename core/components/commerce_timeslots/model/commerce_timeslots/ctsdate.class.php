@@ -18,7 +18,7 @@ class ctsDate extends comSimpleObject
     /**
      * @throws Exception
      */
-    public static function createFutureDates(AdapterInterface $adapter, bool $scheduled = false, $commerce = null)
+    public static function createFutureDates(AdapterInterface $adapter, bool $scheduled = false)
     {
         $prefill = (int)$adapter->getOption('commerce_timeslots.prefill_future_days', null, 31);
         $date = new DateTime(date('Y-m-d') . ' 12:00:00');
