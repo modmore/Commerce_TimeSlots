@@ -78,7 +78,6 @@ class Form extends FormWidget
                 $repeat = false;
                 foreach ($methods as $days) {
                     $days = array_values(array_filter($days));
-                    $this->commerce->modx->log(1,print_r($days, true));
                     if (!empty($days)) {
                         $repeat = true;
                     }

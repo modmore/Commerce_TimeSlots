@@ -235,11 +235,8 @@ class TimeSlots extends BaseModule {
             'for_date:>=' => date('Y-m-d')
         ]);
 
-        //if (31 > $commerce->adapter->getCount(\ctsDate::class, $c)) {
-            \ctsDate::createFutureDates($commerce->adapter, true);
-        //}
-
-
-
+        if (31 > $commerce->adapter->getCount(\ctsDate::class, $c)) {
+            \ctsDate::createFutureDates($commerce->adapter, true, $commerce);
+        }
     }
 }

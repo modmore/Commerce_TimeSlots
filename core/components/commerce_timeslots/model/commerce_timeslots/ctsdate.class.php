@@ -18,7 +18,7 @@ class ctsDate extends comSimpleObject
     /**
      * @throws Exception
      */
-    public static function createFutureDates(AdapterInterface $adapter, bool $scheduled = false)
+    public static function createFutureDates(AdapterInterface $adapter, bool $scheduled = false, $commerce = null)
     {
         $prefill = (int)$adapter->getOption('commerce_timeslots.prefill_future_days', null, 31);
         $date = new DateTime(date('Y-m-d') . ' 12:00:00');
@@ -29,25 +29,28 @@ class ctsDate extends comSimpleObject
             if (!$record) {
                 $record = $adapter->newObject('ctsDate');
                 $record->set('for_date', $date->format('Y-m-d'));
+                // Save for new object so we can use the id
+                $record->save();
             }
 
-
-            // Populate dates with slots from any daily assigned schedules (if run via nightly Scheduler)
+            // Populate new dates with slots from any daily assigned schedules (if run via nightly Scheduler)
             if ($scheduled) {
 
                 // Determine the day - numbered 0(Sun) -> 6(Sat)
                 $dayNum = $date->format('w');
 
                 // We need to offset the day number to match ours
-                // (due to a problem saving key "0" via serialization in the multi-select field)
+                // (due to a problem saving "0" via serialization in the multi-select field)
                 $dayNum++;
 
                 // Get assigned schedules, if any.
                 $schedules = $adapter->getCollection(\ctsSchedule::class, [
                     'repeat'   =>  true
                 ]);
-                $assignedSchedule = null;
+
                 if (!empty($schedules)) {
+
+                    $assignedSchedules = [];
                     foreach ($schedules as $schedule) {
                         if (!$schedule instanceof \ctsSchedule) {
                             $adapter->log(modX::LOG_LEVEL_ERROR, 'Assigned schedule missing or invalid for date '
@@ -56,16 +59,17 @@ class ctsDate extends comSimpleObject
                         }
 
                         // Grab schedule that is assigned to the specified day.
-                        $assignedDays = $schedule->getRepeatDays();
-                        if (!empty($assignedDays)) {
-                            if (in_array($dayNum, $assignedDays)) {
-                                $assignedSchedule = $schedule;
+                        $methodDays = $schedule->getRepeatDays();
+                        if (!empty($methodDays)) {
+                            foreach ($methodDays as $methodId => $assignedDays) {
+                                if (in_array($dayNum, $assignedDays)) {
+                                    $assignedSchedules[$methodId] = $schedule;
+                                }
                             }
                         }
                     }
 
-                    // Only add slots from the schedule if there's not already a schedule applied
-                    if ($record->get('schedule') < 1 && $assignedSchedule !== null) {
+                    foreach ($assignedSchedules as $methodId => $assignedSchedule) {
 
                         // Save new schedule id to date
                         $record->set('schedule', $assignedSchedule->get('id'));
@@ -82,7 +86,7 @@ class ctsDate extends comSimpleObject
                             $newSlot->fromArray([
                                 'for_date' => $record->get('id'),
                                 'base_slot' => $baseSlot->get('id'),
-                                //'shipping_method' => $baseSlot->get('method'),
+                                'shipping_method' => $methodId,
                                 'schedule' => $assignedSchedule->get('id'),
                                 'max_reservations' => $baseSlot->get('max_reservations'),
                                 'available_reservations' => $baseSlot->get('max_reservations'),
@@ -105,8 +109,8 @@ class ctsDate extends comSimpleObject
                             $newSlot->save();
                         }
                     }
-                }
 
+                }
             }
 
             $record->save();
