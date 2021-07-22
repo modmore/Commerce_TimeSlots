@@ -33,21 +33,48 @@ class ctsSchedule extends comSimpleObject
         return $new;
     }
 
-    public function getRepeatDays()
+    /**
+     * @param int $shippingMethodId
+     * @return array
+     */
+    public function getRepeatDays(int $shippingMethodId = 0): array
     {
         $repeatDays = $this->get('repeat_days');
-        $repeatDays = array_values(array_filter($repeatDays));
-        if (!is_array($repeatDays)) {
-            $repeatDays = array();
+
+        if (!empty($repeatDays)) {
+
+            // Return everything if no shipping method was specified
+            if ($shippingMethodId === 0) {
+                return $repeatDays;
+            }
+
+            // Filter by shipping method (the array key)
+            foreach ($repeatDays as $k => $v) {
+                if ((int)$k === $shippingMethodId) {
+
+                    // Make sure there are no keys without values.
+                    $methodDays = array_values(array_filter($v));
+
+                    if (!is_array($methodDays)) {
+                        $methodDays = [];
+                    }
+
+                    return $methodDays;
+                }
+            }
         }
-        return $repeatDays;
+
+        return [];
     }
 
-    public function setRepeatDays($repeatDays, $merge = true)
+    /**
+     * @param int $shippingMethodId
+     * @param array $repeatDays
+     */
+    public function setRepeatDays(int $shippingMethodId, array $repeatDays)
     {
-        if ($merge) {
-            $repeatDays = array_merge($this->getRepeatDays(), $repeatDays);
-        }
-        $this->set('repeat_days', $repeatDays);
+        $currentDays = $this->getRepeatDays();
+        $currentDays[$shippingMethodId] = $repeatDays;
+        $this->set('repeat_days', $currentDays);
     }
 }

@@ -64,7 +64,7 @@ class ctsDate extends comSimpleObject
                         }
                     }
 
-                    // Only add slots from the default schedule if there's not already a schedule applied
+                    // Only add slots from the schedule if there's not already a schedule applied
                     if ($record->get('schedule') < 1 && $assignedSchedule !== null) {
 
                         // Save new schedule id to date

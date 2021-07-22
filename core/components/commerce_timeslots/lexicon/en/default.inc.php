@@ -32,6 +32,9 @@ $_lang['commerce_timeslots.start_repeating'] = 'Start Repeating';
 $_lang['commerce_timeslots.stop_repeating'] = 'Stop Repeating';
 $_lang['commerce_timeslots.schedule_days'] = 'Schedule Days';
 $_lang['commerce_timeslots.schedule_days_desc'] = 'Select days to repeat this schedule on. If a day is already assigned to another schedule, you must unassign it before the days are displayed here.';
+$_lang['commerce_timeslots.shipping_method'] = 'Shipping Method';
+$_lang['commerce_timeslots.shipping_methods'] = 'Shipping Methods';
+$_lang['commerce_timeslots.shipping_methods_desc'] = 'Set the shipping methods to repeat this schedule on.';
 $_lang['commerce_timeslots.delete_schedule'] = 'Delete schedule and slots';
 $_lang['commerce_timeslots.delete_schedule_named'] = 'Delete schedule "[[+name]]" and associated slots';
 

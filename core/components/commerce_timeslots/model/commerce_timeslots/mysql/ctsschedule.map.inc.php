@@ -44,7 +44,7 @@ $xpdo_meta_map['ctsSchedule']= array (
     ),
     'repeat_days' => 
     array (
-      'dbtype' => 'tinytext',
+      'dbtype' => 'text',
       'phptype' => 'array',
       'null' => false,
     ),

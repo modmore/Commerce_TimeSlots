@@ -32,15 +32,23 @@ class Form extends FormWidget
             'description' => ' (Requires Commerce 1.3+) Only one schedule can be assigned to a day.'
         ]);
 
-        $days = new SelectMultipleField($this->commerce, [
-            'name' => 'repeat_days',
-            'label' => $this->adapter->lexicon('commerce_timeslots.schedule_days'),
-            'description' => $this->adapter->lexicon('commerce_timeslots.schedule_days_desc'),
-            'value' => $this->getCurrentDays(),
-            'options' => $this->getAvailableDays()
-
+        // Grab all TimeSlots shipping methods
+        $methods = $this->adapter->getCollection(\comShippingMethod::class, [
+            'class_key' => \TimeSlotsShippingMethod::class
         ]);
-        $fields[] = $days;
+
+        if (!empty($methods)) {
+            foreach ($methods as $method) {
+                $id = $method->get('id');
+                $fields[] = new SelectMultipleField($this->commerce, [
+                    'name' => 'repeat_days_' . $id,
+                    'label' => $this->adapter->lexicon('commerce_timeslots.shipping_method') . ': ' . $method->get('name'),
+                    'description' => $this->adapter->lexicon('commerce_timeslots.schedule_days_desc'),
+                    'value' => $this->getCurrentDays($id),
+                    'options' => $this->getAvailableDays($id)
+                ]);
+            }
+        }
 
         return $fields;
     }
@@ -55,25 +63,42 @@ class Form extends FormWidget
 
     public function handleSubmit($values)
     {
-        if (!empty($values['repeat_days'])) {
-            $repeatDays = array_values(array_filter($values['repeat_days']));
-            $this->record->setRepeatDays($repeatDays, false);
+        foreach ($values as $k => $v) {
+            $kArray = explode('_',$k);
+            if ($kArray[0] === 'repeat' && $kArray[1] === 'days') {
+                $methodId = end($kArray);
 
-            if (count($this->record->getRepeatDays()) > 0) {
-                $this->record->set('repeat', true);
-            }
-            else {
-                $this->record->set('repeat', false);
-            }
+                $repeatDays = array_values(array_filter($v));
+                $this->record->setRepeatDays($methodId, $repeatDays);
 
+                // Now check all the methods and days for this schedule.
+                $methods = $this->record->getRepeatDays();
+
+                // If any of the methods have days assigned, declare this schedule repeatable. Otherwise, not.
+                $repeat = false;
+                foreach ($methods as $days) {
+                    $days = array_values(array_filter($days));
+                    $this->commerce->modx->log(1,print_r($days, true));
+                    if (!empty($days)) {
+                        $repeat = true;
+                    }
+                }
+                $this->record->set('repeat', $repeat);
+
+            }
         }
+
         return parent::handleSubmit($values);
     }
 
-    public function getCurrentDays(): string
+    /**
+     * @param int $methodId
+     * @return string
+     */
+    public function getCurrentDays(int $methodId): string
     {
         $output = '';
-        $days = $this->record->getRepeatDays();
+        $days = $this->record->getRepeatDays($methodId);
         if(!empty($days)) {
             foreach ($days as $day) {
                 $output .= $day . ',';
@@ -84,7 +109,11 @@ class Form extends FormWidget
         return  '';
     }
 
-    public function getAvailableDays(): array
+    /**
+     * @param int $methodId
+     * @return array[]
+     */
+    public function getAvailableDays(int $methodId): array
     {
         $collection = $this->adapter->getCollection(\ctsSchedule::class, [
             'repeat' => 1,
@@ -132,7 +161,7 @@ class Form extends FormWidget
                     continue;
                 }
 
-                $unavailableDays = $schedule->getRepeatDays();
+                $unavailableDays = $schedule->getRepeatDays($methodId);
                 foreach ($availableDays as $k => $availableDay) {
                     if (in_array($availableDay['value'], $unavailableDays)) {
                         unset($availableDays[$k]);
