@@ -60,37 +60,44 @@ class Form extends FormWidget
             'label' => $this->adapter->lexicon('commerce.name'),
         ]);
 
-        $fields[] = new SectionField($this->commerce, [
-            'label' => $this->adapter->lexicon('commerce_timeslots.repeat_schedule'),
-            'description' => $this->adapter->lexicon('commerce_timeslots.repeat_schedule_desc'),
-        ]);
+        // Requires the Scheduler service in Commerce 1.3+
+        $root = $this->commerce->config['core_path'];
+        $path = $root . 'src/Services/Scheduler/crontime';
+        if (file_exists($path)) {
 
-        // Grab all TimeSlots shipping methods
-        $methods = $this->adapter->getCollection(\comShippingMethod::class, [
-            'class_key' => \TimeSlotsShippingMethod::class
-        ]);
+            $fields[] = new SectionField($this->commerce, [
+                'label' => $this->adapter->lexicon('commerce_timeslots.repeat_schedule'),
+                'description' => $this->adapter->lexicon('commerce_timeslots.repeat_schedule_desc'),
+            ]);
 
-        if (!empty($methods)) {
-            foreach ($methods as $method) {
-                $id = $method->get('id');
+            // Grab all TimeSlots shipping methods
+            $methods = $this->adapter->getCollection(\comShippingMethod::class, [
+                'class_key' => \TimeSlotsShippingMethod::class
+            ]);
 
-                // Generate descriptions to display any days already set by other schedules
-                $days = $this->getUnavailableDays($id);
+            if (!empty($methods)) {
+                foreach ($methods as $method) {
+                    $id = $method->get('id');
 
-                $desc = '';
-                foreach ($days as $k => $v) {
-                    $desc .= $this->adapter->lexicon('commerce_timeslots.schedule') .
-                        ' ' . $k .': (' . implode(', ', $v) .') ';
+                    // Generate descriptions to display any days already set by other schedules
+                    $days = $this->getUnavailableDays($id);
+
+                    $desc = '';
+                    foreach ($days as $k => $v) {
+                        $desc .= $this->adapter->lexicon('commerce_timeslots.schedule') .
+                            ' ' . $k . ': (' . implode(', ', $v) . ') ';
+                    }
+
+                    $fields[] = new SelectMultipleField($this->commerce, [
+                        'name' => 'repeat_days_' . $id,
+                        'label' => $this->adapter->lexicon('commerce_timeslots.shipping_method') . ': ' . $method->get('name'),
+                        'description' => $desc,
+                        'value' => $this->getCurrentDays($id),
+                        'options' => $this->getAvailableDays($id)
+                    ]);
                 }
-
-                $fields[] = new SelectMultipleField($this->commerce, [
-                    'name' => 'repeat_days_' . $id,
-                    'label' => $this->adapter->lexicon('commerce_timeslots.shipping_method') . ': ' . $method->get('name'),
-                    'description' => $desc,
-                    'value' => $this->getCurrentDays($id),
-                    'options' => $this->getAvailableDays($id)
-                ]);
             }
+
         }
 
         return $fields;

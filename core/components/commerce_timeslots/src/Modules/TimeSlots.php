@@ -68,7 +68,6 @@ class TimeSlots extends BaseModule {
         if (file_exists($path)) {
             // Runs at midnight each night.
             $this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::weekly('*', 0,0));
-            //$this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::hourly('*'));
         }
     }
 
@@ -227,7 +226,6 @@ class TimeSlots extends BaseModule {
     }
 
     public static function populateDailySlots($commerce) {
-        $commerce->adapter->log(1,date('H:i:s',time()));
 
         $c = $commerce->adapter->newQuery(\ctsDate::class);
         $c->select($commerce->adapter->getSelectColumns(\ctsDate::class, \ctsDate::class));
