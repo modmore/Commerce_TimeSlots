@@ -27,14 +27,9 @@ $_lang['commerce_timeslots.duplicate_slot'] = 'Duplicate slot';
 $_lang['commerce_timeslots.add_schedule'] = 'Add schedule';
 $_lang['commerce_timeslots.edit_schedule'] = 'Edit schedule';
 $_lang['commerce_timeslots.duplicate_schedule'] = 'Duplicate schedule';
-$_lang['commerce_timeslots.repeat'] = 'Repeat';
-$_lang['commerce_timeslots.start_repeating'] = 'Start Repeating';
-$_lang['commerce_timeslots.stop_repeating'] = 'Stop Repeating';
-$_lang['commerce_timeslots.schedule_days'] = 'Schedule Days';
-$_lang['commerce_timeslots.schedule_days_desc'] = 'Select days to repeat this schedule on. If a day is already assigned to another schedule, you must unassign it before the days are displayed here.';
+$_lang['commerce_timeslots.repeat_schedule'] = 'Repeat This Schedule';
+$_lang['commerce_timeslots.repeat_schedule_desc'] = 'Automatically apply this schedule to upcoming dates every night. For each shipping method, only one schedule can be applied to a date. If any days are not available to select, it means another schedule has already been applied to that day.';
 $_lang['commerce_timeslots.shipping_method'] = 'Shipping Method';
-$_lang['commerce_timeslots.shipping_methods'] = 'Shipping Methods';
-$_lang['commerce_timeslots.shipping_methods_desc'] = 'Set the shipping methods to repeat this schedule on.';
 $_lang['commerce_timeslots.delete_schedule'] = 'Delete schedule and slots';
 $_lang['commerce_timeslots.delete_schedule_named'] = 'Delete schedule "[[+name]]" and associated slots';
 

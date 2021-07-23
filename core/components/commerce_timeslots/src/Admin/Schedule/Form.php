@@ -17,9 +17,42 @@ class Form extends FormWidget
     protected $classKey = 'ctsSchedule';
     public $key = 'timeslots-schedule-form';
     public $title = '';
+    public $availableDays = [];
 
     public function getFields(array $options = array())
     {
+        // Create structure of day options
+        $this->availableDays = [
+            [
+                'label' => $this->adapter->lexicon('sunday'),
+                'value' => TimeSlots::SUNDAY
+            ],
+            [
+                'label' => $this->adapter->lexicon('monday'),
+                'value' => TimeSlots::MONDAY
+            ],
+            [
+                'label' => $this->adapter->lexicon('tuesday'),
+                'value' => TimeSlots::TUESDAY
+            ],
+            [
+                'label' => $this->adapter->lexicon('wednesday'),
+                'value' => TimeSlots::WEDNESDAY
+            ],
+            [
+                'label' => $this->adapter->lexicon('thursday'),
+                'value' => TimeSlots::THURSDAY
+            ],
+            [
+                'label' => $this->adapter->lexicon('friday'),
+                'value' => TimeSlots::FRIDAY
+            ],
+            [
+                'label' => $this->adapter->lexicon('saturday'),
+                'value' => TimeSlots::SATURDAY
+            ],
+        ];
+
         $fields = [];
 
         $fields[] = new TextField($this->commerce, [
@@ -28,8 +61,8 @@ class Form extends FormWidget
         ]);
 
         $fields[] = new SectionField($this->commerce, [
-            'label' => 'Repeat This Schedule',
-            'description' => ' (Requires Commerce 1.3+) Only one schedule can be assigned to a day.'
+            'label' => $this->adapter->lexicon('commerce_timeslots.repeat_schedule'),
+            'description' => $this->adapter->lexicon('commerce_timeslots.repeat_schedule_desc'),
         ]);
 
         // Grab all TimeSlots shipping methods
@@ -40,10 +73,20 @@ class Form extends FormWidget
         if (!empty($methods)) {
             foreach ($methods as $method) {
                 $id = $method->get('id');
+
+                // Generate descriptions to display any days already set by other schedules
+                $days = $this->getUnavailableDays($id);
+
+                $desc = '';
+                foreach ($days as $k => $v) {
+                    $desc .= $this->adapter->lexicon('commerce_timeslots.schedule') .
+                        ' ' . $k .': (' . implode(', ', $v) .') ';
+                }
+
                 $fields[] = new SelectMultipleField($this->commerce, [
                     'name' => 'repeat_days_' . $id,
                     'label' => $this->adapter->lexicon('commerce_timeslots.shipping_method') . ': ' . $method->get('name'),
-                    'description' => $this->adapter->lexicon('commerce_timeslots.schedule_days_desc'),
+                    'description' => $desc,
                     'value' => $this->getCurrentDays($id),
                     'options' => $this->getAvailableDays($id)
                 ]);
@@ -112,43 +155,13 @@ class Form extends FormWidget
      * @param int $methodId
      * @return array[]
      */
-    public function getAvailableDays(int $methodId): array
+    protected function getAvailableDays(int $methodId): array
     {
         $collection = $this->adapter->getCollection(\ctsSchedule::class, [
             'repeat' => 1,
         ]);
 
-        // Create structure of day options
-        $availableDays = [
-            [
-                'label' => $this->adapter->lexicon('sunday'),
-                'value' => TimeSlots::SUNDAY
-            ],
-            [
-                'label' => $this->adapter->lexicon('monday'),
-                'value' => TimeSlots::MONDAY
-            ],
-            [
-                'label' => $this->adapter->lexicon('tuesday'),
-                'value' => TimeSlots::TUESDAY
-            ],
-            [
-                'label' => $this->adapter->lexicon('wednesday'),
-                'value' => TimeSlots::WEDNESDAY
-            ],
-            [
-                'label' => $this->adapter->lexicon('thursday'),
-                'value' => TimeSlots::THURSDAY
-            ],
-            [
-                'label' => $this->adapter->lexicon('friday'),
-                'value' => TimeSlots::FRIDAY
-            ],
-            [
-                'label' => $this->adapter->lexicon('saturday'),
-                'value' => TimeSlots::SATURDAY
-            ],
-        ];
+        $availableDays = $this->availableDays;
 
         // Remove days from the structure that are already assigned
         if (!empty($collection)) {
@@ -161,6 +174,7 @@ class Form extends FormWidget
                 }
 
                 $unavailableDays = $schedule->getRepeatDays($methodId);
+
                 foreach ($availableDays as $k => $availableDay) {
                     if (in_array($availableDay['value'], $unavailableDays)) {
                         unset($availableDays[$k]);
@@ -169,5 +183,38 @@ class Form extends FormWidget
             }
         }
         return $availableDays;
+    }
+
+    /**
+     * @param int $methodId
+     * @return array
+     */
+    protected function getUnavailableDays(int $methodId): array
+    {
+        $schedules = $this->adapter->getCollection(\ctsSchedule::class, [
+            'repeat' => 1,
+        ]);
+        if (empty($schedules)) {
+            return [];
+        }
+
+        $days = $this->availableDays;
+
+        $output = [];
+        foreach ($schedules as $schedule) {
+            /** @var \ctsSchedule $schedule */
+            if ($schedule->get('id') === $this->record->get('id')) {
+                continue;
+            }
+
+            $unavailableDays = $schedule->getRepeatDays($methodId);
+            foreach ($days as $k => $day) {
+                if (in_array($day['value'], $unavailableDays)) {
+                    $output[$schedule->get('name')][$day['value']] = $day['label'];
+                }
+            }
+        }
+
+        return $output;
     }
 }
