@@ -91,36 +91,47 @@ class Grid extends GridWidget {
 
         // Display the days this schedule is assigned to automatically
         if ($schedule->get('repeat')) {
-            $days = $schedule->getRepeatDays();
-            foreach ($days as $day) {
-                $name = '';
-                switch ($day) {
-                    case TimeSlots::MONDAY:
-                        $name = $this->adapter->lexicon('monday');
-                        break;
-                    case TimeSlots::TUESDAY:
-                        $name = $this->adapter->lexicon('tuesday');
-                        break;
-                    case TimeSlots::WEDNESDAY:
-                        $name = $this->adapter->lexicon('wednesday');
-                        break;
-                    case TimeSlots::THURSDAY:
-                        $name = $this->adapter->lexicon('thursday');
-                        break;
-                    case TimeSlots::FRIDAY:
-                        $name = $this->adapter->lexicon('friday');
-                        break;
-                    case TimeSlots::SATURDAY:
-                        $name = $this->adapter->lexicon('saturday');
-                        break;
-                    case TimeSlots::SUNDAY:
-                        $name = $this->adapter->lexicon('sunday');
-                        break;
-                }
-                // TODO: Make these into nice-looking styled tags
-                $item['name'] .= '<br><span style="color: #6a6a6a; font-size: 9px;">*' . $name . '</span>';
-            }
+            $item['name'] .= '<div style="margin:16px 0 8px 0; font-size:11px; color:#6a6a6a;"><i class="icon icon-calendar"></i> Scheduled Days</div>';
 
+            $methods = $this->adapter->getCollection(\comShippingMethod::class, [
+                'class_key' => \TimeSlotsShippingMethod::class
+            ]);
+
+            if (!empty($methods)) {
+                foreach ($methods as $method) {
+                    $days = $schedule->getRepeatDays($method->get('id'));
+                    $dayNames = [];
+                    foreach ($days as $day) {
+                        switch ($day) {
+                            case TimeSlots::MONDAY:
+                                $dayNames[] = $this->adapter->lexicon('monday');
+                                break;
+                            case TimeSlots::TUESDAY:
+                                $dayNames[] = $this->adapter->lexicon('tuesday');
+                                break;
+                            case TimeSlots::WEDNESDAY:
+                                $dayNames[] = $this->adapter->lexicon('wednesday');
+                                break;
+                            case TimeSlots::THURSDAY:
+                                $dayNames[] = $this->adapter->lexicon('thursday');
+                                break;
+                            case TimeSlots::FRIDAY:
+                                $dayNames[] = $this->adapter->lexicon('friday');
+                                break;
+                            case TimeSlots::SATURDAY:
+                                $dayNames[] = $this->adapter->lexicon('saturday');
+                                break;
+                            case TimeSlots::SUNDAY:
+                                $dayNames[] = $this->adapter->lexicon('sunday');
+                                break;
+                        }
+                    }
+                    $item['name'] .= $this->commerce->view()->render('/timeslots/admin/repeat_schedule.twig', [
+                        'shipping_method' => $method->get('name'),
+                        'days' => $dayNames
+                    ]);
+                }
+            }
         }
 
         $item['actions'] = [];

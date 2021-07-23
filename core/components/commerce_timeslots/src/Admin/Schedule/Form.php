@@ -158,7 +158,7 @@ class Form extends FormWidget
     protected function getAvailableDays(int $methodId): array
     {
         $collection = $this->adapter->getCollection(\ctsSchedule::class, [
-            'repeat' => 1,
+            'repeat' => true,
         ]);
 
         $availableDays = $this->availableDays;
@@ -192,7 +192,7 @@ class Form extends FormWidget
     protected function getUnavailableDays(int $methodId): array
     {
         $schedules = $this->adapter->getCollection(\ctsSchedule::class, [
-            'repeat' => 1,
+            'repeat' => true,
         ]);
         if (empty($schedules)) {
             return [];
@@ -208,7 +208,7 @@ class Form extends FormWidget
             }
 
             $unavailableDays = $schedule->getRepeatDays($methodId);
-            foreach ($days as $k => $day) {
+            foreach ($days as $day) {
                 if (in_array($day['value'], $unavailableDays)) {
                     $output[$schedule->get('name')][$day['value']] = $day['label'];
                 }
