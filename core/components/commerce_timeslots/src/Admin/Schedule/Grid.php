@@ -91,10 +91,11 @@ class Grid extends GridWidget {
 
         // Display the days this schedule is assigned to automatically
         if ($schedule->get('repeat')) {
-            $item['name'] .= '<div style="margin:16px 0 8px 0; font-size:11px; color:#6a6a6a;"><i class="icon icon-calendar"></i> Scheduled Days</div>';
+            $item['name'] .= '<div style="margin:16px 0 8px 0; font-size:11px; color:#6a6a6a;"><i class="icon icon-calendar"></i> ' . $this->adapter->lexicon('commerce_timeslots.scheduled_days') . '</div>';
 
             $methods = $this->adapter->getCollection(\comShippingMethod::class, [
-                'class_key' => \TimeSlotsShippingMethod::class
+                'class_key' => \TimeSlotsShippingMethod::class,
+                'removed' => false
             ]);
 
             if (!empty($methods)) {

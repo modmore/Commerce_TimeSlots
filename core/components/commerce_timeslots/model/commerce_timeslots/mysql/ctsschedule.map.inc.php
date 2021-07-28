@@ -46,7 +46,7 @@ $xpdo_meta_map['ctsSchedule']= array (
     array (
       'dbtype' => 'text',
       'phptype' => 'array',
-      'null' => false,
+      'null' => true,
     ),
   ),
   'indexes' => 

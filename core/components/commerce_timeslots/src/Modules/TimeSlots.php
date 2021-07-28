@@ -63,11 +63,9 @@ class TimeSlots extends BaseModule {
 
 
         // Requires the Scheduler service in Commerce 1.3+
-        $root = $this->commerce->config['core_path'];
-        $path = $root . 'src/Services/Scheduler/crontime';
-        if (file_exists($path)) {
+        if ($this->commerce->isSchedulerActive()) {
             // Runs at midnight each night.
-            $this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::weekly('*', 0,0));
+            $this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::daily(0, 0));
         }
     }
 
