@@ -62,7 +62,8 @@ class Form extends FormWidget
 
 
         $sectionLabel = $this->adapter->lexicon('commerce_timeslots.repeat_schedule');
-        if (!$this->commerce->isSchedulerActive()) {
+
+        if (!method_exists($this->commerce, 'scheduler')) {
             // Requires the Scheduler service in Commerce 1.3+
             $sectionLabel = $sectionLabel . ' ' .$this->adapter->lexicon('commerce_timeslots.repeat_schedule_desc.require_new');
         }
