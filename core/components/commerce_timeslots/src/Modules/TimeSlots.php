@@ -1,10 +1,13 @@
 <?php
 namespace modmore\Commerce_TimeSlots\Modules;
 
+use DateInterval;
+use DateTime;
 use modmore\Commerce\Events\Admin\GeneratorEvent;
 use modmore\Commerce\Events\Admin\TopNavMenu;
 use modmore\Commerce\Events\Checkout;
 use modmore\Commerce\Modules\BaseModule;
+use modmore\Commerce\Services\Scheduler\Interval;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Create;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Delete;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Duplicate;
@@ -15,6 +18,14 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 class TimeSlots extends BaseModule {
+
+    const SUNDAY = 1;
+    const MONDAY = 2;
+    const TUESDAY = 3;
+    const WEDNESDAY = 4;
+    const THURSDAY = 5;
+    const FRIDAY = 6;
+    const SATURDAY = 7;
 
     public function getName()
     {
@@ -49,6 +60,13 @@ class TimeSlots extends BaseModule {
         $dispatcher->addListener(\Commerce::EVENT_DASHBOARD_INIT_GENERATOR, [$this, 'initGenerator']);
         $dispatcher->addListener(\Commerce::EVENT_DASHBOARD_GET_MENU, [$this, 'getMenu']);
         $dispatcher->addListener(\Commerce::EVENT_CHECKOUT_BEFORE_STEP, [$this, 'beforeCheckoutStep']);
+
+
+        // Requires the Scheduler service in Commerce 1.3+
+        if (method_exists($this->commerce, 'scheduler')) {
+            // Runs at midnight each night.
+            $this->commerce->scheduler()->repeat([$this, 'populateDailySlots'], Interval::daily(0, 0));
+        }
     }
 
     public function initGenerator(GeneratorEvent $event)
@@ -203,5 +221,18 @@ class TimeSlots extends BaseModule {
     private function insertInArray($array,$values,$offset)
     {
         return array_slice($array, 0, $offset, true) + $values + array_slice($array, $offset, NULL, true);
+    }
+
+    public static function populateDailySlots($commerce) {
+
+        $c = $commerce->adapter->newQuery(\ctsDate::class);
+        $c->select($commerce->adapter->getSelectColumns(\ctsDate::class, \ctsDate::class));
+        $c->where([
+            'for_date:>=' => date('Y-m-d')
+        ]);
+
+        if (31 > $commerce->adapter->getCount(\ctsDate::class, $c)) {
+            \ctsDate::createFutureDates($commerce->adapter, true);
+        }
     }
 }

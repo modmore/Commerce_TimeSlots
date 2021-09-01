@@ -105,7 +105,7 @@ class Grid extends GridWidget {
         ]);
         $c->sortby('time_from', 'ASC');
         $c->sortby('time_until', 'ASC');
-        
+
         /** @var \ctsDateSlot[] $slots */
         $slots = $this->adapter->getCollection(\ctsDateSlot::class, $c);
         foreach ($slots as $slot) {

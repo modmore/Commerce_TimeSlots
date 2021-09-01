@@ -5,9 +5,16 @@
 
     <object class="ctsSchedule" table="commext_timeslots_schedule">
         <field key="name" dbtype="varchar" precision="190" phptype="string" null="false" default="" />
+        <field key="repeat" dbtype="tinyint" precision="1" phptype="boolean" null="false" default="0" />
+        <field key="repeat_days" dbtype="text" phptype="array" null="true" />
+
+        <index alias="repeat" name="repeat" primary="false" unique="false" type="BTREE">
+            <column key="repeat" length="" collation="A" null="false" />
+        </index>
 
         <composite alias="Slots" class="ctsScheduleSlot" local="id" foreign="schedule" cardinality="many" owner="local" />
     </object>
+
     <object class="ctsScheduleSlot" table="commext_timeslots_schedule_slot">
         <field key="schedule" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
         <field key="time_from" dbtype="varchar" precision="190" phptype="string" null="false" default="" />

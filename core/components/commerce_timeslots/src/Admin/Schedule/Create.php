@@ -15,7 +15,7 @@ class Create extends Page {
         $section = new SimpleSection($this->commerce, [
             'title' => $this->title
         ]);
-        $section->addWidget((new Form($this->commerce, []))->setUp());
+        $section->addWidget((new Form($this->commerce))->setUp());
         $this->addSection($section);
         return $this;
     }

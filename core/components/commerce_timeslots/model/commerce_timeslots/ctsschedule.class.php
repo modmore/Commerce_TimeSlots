@@ -33,5 +33,48 @@ class ctsSchedule extends comSimpleObject
         return $new;
     }
 
+    /**
+     * @param int $shippingMethodId
+     * @return array
+     */
+    public function getRepeatDays(int $shippingMethodId = 0): array
+    {
+        $repeatDays = $this->get('repeat_days');
 
+        if (!empty($repeatDays)) {
+
+            // Return everything if no shipping method was specified
+            if ($shippingMethodId === 0) {
+                return $repeatDays;
+            }
+
+            // Filter by shipping method (the array key)
+            foreach ($repeatDays as $k => $v) {
+                if ((int)$k === $shippingMethodId) {
+
+                    // Make sure there are no keys without values.
+                    $methodDays = array_values(array_filter($v));
+
+                    if (!is_array($methodDays)) {
+                        $methodDays = [];
+                    }
+
+                    return $methodDays;
+                }
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * @param int $shippingMethodId
+     * @param array $repeatDays
+     */
+    public function setRepeatDays(int $shippingMethodId, array $repeatDays)
+    {
+        $currentDays = $this->getRepeatDays();
+        $currentDays[$shippingMethodId] = $repeatDays;
+        $this->set('repeat_days', $currentDays);
+    }
 }

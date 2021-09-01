@@ -5,6 +5,7 @@ namespace modmore\Commerce_TimeSlots\Admin\Schedule;
 use modmore\Commerce\Admin\Util\Action;
 use modmore\Commerce\Admin\Util\Column;
 use modmore\Commerce\Admin\Widgets\GridWidget;
+use modmore\Commerce_TimeSlots\Modules\TimeSlots;
 
 class Grid extends GridWidget {
     public $key = 'timeslots-schedule-grid';
@@ -88,12 +89,64 @@ class Grid extends GridWidget {
         $item['name'] = '<a href="' . $editLink . '" class="commerce-ajax-modal">' . $this->encode($item['name']) . '</a>';
         $item['name'] .= ' <nobr style="color: #6a6a6a;">(#' . $item['id'] . ')</nobr>';
 
+        // Display the days this schedule is assigned to automatically
+        if ($schedule->get('repeat')) {
+            $item['name'] .= '<div style="margin:16px 0 8px 0; font-size:11px; color:#6a6a6a;"><i class="icon icon-calendar"></i> ' . $this->adapter->lexicon('commerce_timeslots.scheduled_days') . '</div>';
+
+            $methods = $this->adapter->getCollection(\comShippingMethod::class, [
+                'class_key' => \TimeSlotsShippingMethod::class,
+                'removed' => false
+            ]);
+
+            if (!empty($methods)) {
+                foreach ($methods as $method) {
+                    $days = $schedule->getRepeatDays($method->get('id'));
+                    $dayNames = [];
+                    foreach ($days as $day) {
+                        switch ($day) {
+                            case TimeSlots::MONDAY:
+                                $dayNames[] = $this->adapter->lexicon('monday');
+                                break;
+                            case TimeSlots::TUESDAY:
+                                $dayNames[] = $this->adapter->lexicon('tuesday');
+                                break;
+                            case TimeSlots::WEDNESDAY:
+                                $dayNames[] = $this->adapter->lexicon('wednesday');
+                                break;
+                            case TimeSlots::THURSDAY:
+                                $dayNames[] = $this->adapter->lexicon('thursday');
+                                break;
+                            case TimeSlots::FRIDAY:
+                                $dayNames[] = $this->adapter->lexicon('friday');
+                                break;
+                            case TimeSlots::SATURDAY:
+                                $dayNames[] = $this->adapter->lexicon('saturday');
+                                break;
+                            case TimeSlots::SUNDAY:
+                                $dayNames[] = $this->adapter->lexicon('sunday');
+                                break;
+                        }
+                    }
+                    $item['name'] .= $this->commerce->view()->render('/timeslots/admin/repeat_schedule.twig', [
+                        'shipping_method' => $method->get('name'),
+                        'days' => $dayNames
+                    ]);
+                }
+            }
+        }
+
         $item['actions'] = [];
 
         $item['actions'][] = (new Action())
             ->setUrl($addSlotLink)
             ->setTitle($this->adapter->lexicon('commerce_timeslots.add_slot'))
             ->setIcon('icon-plus');
+
+        $setEditLink = $this->adapter->makeAdminUrl('timeslots/schedule/edit', ['id' => $schedule->get('id')]);
+        $item['actions'][] = (new Action())
+            ->setUrl($setEditLink)
+            ->setTitle($this->adapter->lexicon('commerce_timeslots.edit_schedule'))
+            ->setIcon('icon-edit');
 
         $duplicateLink = $this->adapter->makeAdminUrl('timeslots/schedule/duplicate', ['id' => $schedule->get('id')]);
         $item['actions'][] = (new Action())

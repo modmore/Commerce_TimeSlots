@@ -254,6 +254,22 @@ $xpdo_meta_map['ctsDateSlot']= array (
         ),
       ),
     ),
+    'placed_reservations' => 
+    array (
+      'alias' => 'placed_reservations',
+      'primary' => false,
+      'unique' => false,
+      'type' => 'BTREE',
+      'columns' => 
+      array (
+        'placed_reservations' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+      ),
+    ),
     'available_reservations' => 
     array (
       'alias' => 'available_reservations',
