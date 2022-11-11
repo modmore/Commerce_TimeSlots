@@ -49,7 +49,6 @@ class ctsDate extends comSimpleObject
                 ]);
 
                 if (!empty($schedules)) {
-
                     $assignedSchedules = [];
                     foreach ($schedules as $schedule) {
                         if (!$schedule instanceof \ctsSchedule) {
@@ -70,7 +69,6 @@ class ctsDate extends comSimpleObject
                     }
 
                     foreach ($assignedSchedules as $methodId => $assignedSchedule) {
-
                         // Save new schedule id to date
                         $record->set('schedule', $assignedSchedule->get('id'));
 
@@ -81,7 +79,22 @@ class ctsDate extends comSimpleObject
                         ]);
                         $c->sortby('time_from');
                         $c->sortby('time_until');
+
                         foreach ($adapter->getIterator(\ctsScheduleSlot::class, $c) as $baseSlot) {
+                            // Check for existing date slots that match this base slot
+                            $dateSlot = $adapter->getObject(\ctsDateSlot::Class, [
+                                'for_date' => $record->get('id'),
+                                'base_slot' => $baseSlot->get('id')
+                            ]);
+                            if ($dateSlot) {
+                                // Don't create a duplicate
+                                continue;
+                            }
+
+                            $timeFrom = self::convertToTimestamp($record->get('for_date'), $baseSlot->get('time_from'));
+                            $timeUntil = self::convertToTimestamp($record->get('for_date'), $baseSlot->get('time_until'));
+                            $closesAfter = $timeFrom - ($baseSlot->get('lead_time') * 60);
+
                             $newSlot = $adapter->newObject(\ctsDateSlot::class);
                             $newSlot->fromArray([
                                 'for_date' => $record->get('id'),
@@ -91,25 +104,13 @@ class ctsDate extends comSimpleObject
                                 'max_reservations' => $baseSlot->get('max_reservations'),
                                 'available_reservations' => $baseSlot->get('max_reservations'),
                                 'price' => $baseSlot->get('price'),
+                                'time_from' => $timeFrom,
+                                'time_until' => $timeUntil,
+                                'closes_after' => $closesAfter
                             ]);
-
-                            // Calculate the timeFrom and timeUntil using DateTime. This makes sure it uses the servers' timezone
-                            // and that the appropriate offset is handled when converting to UTC.
-                            $timeFrom = explode(':', $baseSlot->get('time_from'));
-                            $timeFromDate = (new DateTime($record->get('for_date')))->setTime($timeFrom[0], $timeFrom[1]);
-                            $newSlot->set('time_from', $timeFromDate->format('U'));
-
-                            $timeUntil = explode(':', $baseSlot->get('time_until'));
-                            $timeUntilDate = (new DateTime($record->get('for_date')))->setTime($timeUntil[0], $timeUntil[1]);
-                            $newSlot->set('time_until', $timeUntilDate->format('U'));
-
-                            // For the "closes after", simply remove the lead time (defined in minutes) from the calculated unix timestamp
-                            // @todo This may cause oddities during DST switches, but for now I'm okay with that.
-                            $newSlot->set('closes_after', $newSlot->get('time_from') - ($baseSlot->get('lead_time') * 60));
                             $newSlot->save();
                         }
                     }
-
                 }
             }
 
@@ -119,5 +120,23 @@ class ctsDate extends comSimpleObject
 
             $prefill--;
         }
+    }
+
+    /**
+     * Converts a date and a time to a single timestamp
+     * Date format: Y-m-d (e.g. 2022-11-20)
+     * Time format: H:i (e.g. 09:00)
+     * @param string $date
+     * @param string $time
+     * @return string
+     * @throws Exception
+     */
+    protected static function convertToTimestamp(string $date, string $time): string
+    {
+        // Calculate the timeFrom and timeUntil using DateTime. This makes sure it uses the servers' timezone
+        // and that the appropriate offset is handled when converting to UTC.
+        $timeParts = explode(':', $time);
+        $dateTime = (new DateTime($date))->setTime($timeParts[0], $timeParts[1]);
+        return $dateTime->format('U');
     }
 }
