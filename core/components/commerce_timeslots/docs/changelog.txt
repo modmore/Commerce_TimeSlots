@@ -1,7 +1,8 @@
 TimeSlots for Commerce 1.1.0-pl
 ----------------------------------
-Released on 2021-
+Released on 2022-11-24
 
+- Add ability to automatically plan schedules on specific days [#9] - requires Commerce 1.3
 - Add missing translation files
 - Add snippet to render available timeslots as either grid or "order by".
 
