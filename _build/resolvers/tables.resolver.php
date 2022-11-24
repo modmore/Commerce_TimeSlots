@@ -33,6 +33,7 @@ if ($transport->xpdo) {
             $modx->setLogLevel(modX::LOG_LEVEL_FATAL);
 
             $manager->addField(ctsSchedule::class, 'repeat');
+            $manager->addField(ctsSchedule::class, 'repeat_days');
             // Return log level to normal.
             $modx->setLogLevel($logLevel);
 
