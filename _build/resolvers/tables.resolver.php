@@ -31,6 +31,8 @@ if ($transport->xpdo) {
 
             // For database updates, we only want absolutely fatal errors.
             $modx->setLogLevel(modX::LOG_LEVEL_FATAL);
+
+            $manager->addField(ctsSchedule::class, 'repeat');
             // Return log level to normal.
             $modx->setLogLevel($logLevel);
 

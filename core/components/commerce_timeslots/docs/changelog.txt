@@ -1,3 +1,9 @@
+TimeSlots for Commerce 1.1.1-pl
+----------------------------------
+Released on 2022-11-24
+
+- Add missing database table resolver
+
 TimeSlots for Commerce 1.1.0-pl
 ----------------------------------
 Released on 2022-11-24
