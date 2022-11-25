@@ -34,6 +34,12 @@ $_lang['commerce_timeslots.repeat_schedule_desc.require_new'] = '*** Requires Co
 $_lang['commerce_timeslots.shipping_method'] = 'Shipping Method';
 $_lang['commerce_timeslots.delete_schedule'] = 'Delete schedule and slots';
 $_lang['commerce_timeslots.delete_schedule_named'] = 'Delete schedule "[[+name]]" and associated slots';
+$_lang['commerce_timeslots.note'] = 'Note';
+$_lang['commerce_timeslots.populate'] = 'Populate';
+$_lang['commerce_timeslots.populate_daily_slots'] = 'Populate Daily Slots';
+$_lang['commerce_timeslots.populate_daily_slots.confirm'] = 'Are you sure you would like to populate daily slots for the next 30 days?';
+$_lang['commerce_timeslots.populate_daily_slots.note'] = 'This will also automatically run nightly as a Commerce scheduled task.';
+$_lang['commerce_timeslots.populate_daily_slots.description'] = 'If a schedule is set to repeatable, it will populate any slots for the days assigned to that schedule. However, slots already populated will not be overwritten, so make sure your schedules are complete first.';
 
 $_lang['commerce_timeslots.edit_planning'] = 'Edit planning';
 $_lang['commerce_timeslots.date'] = 'Date';
