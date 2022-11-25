@@ -1,3 +1,16 @@
+TimeSlots for Commerce 1.2.0-pl
+----------------------------------
+Released on 2022-11-25
+
+- Add populate button to manually populate daily slots in addition to the automatic option. [#10]
+- Add ability to select a slot by just the slot id. May be useful for customized templates. [#8]
+
+TimeSlots for Commerce 1.1.2-pl
+----------------------------------
+Released on 2022-11-24
+
+- Fix resolver
+
 TimeSlots for Commerce 1.1.1-pl
 ----------------------------------
 Released on 2022-11-24
