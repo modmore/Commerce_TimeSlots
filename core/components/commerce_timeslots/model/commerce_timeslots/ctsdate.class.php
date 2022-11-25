@@ -14,7 +14,6 @@ use modmore\Commerce\Adapter\AdapterInterface;
  */
 class ctsDate extends comSimpleObject
 {
-
     /**
      * @throws Exception
      */

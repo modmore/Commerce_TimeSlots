@@ -2,6 +2,7 @@
 
 namespace modmore\Commerce_TimeSlots\Admin\Schedule;
 
+use ctsSchedule;
 use modmore\Commerce\Admin\Util\Action;
 use modmore\Commerce\Admin\Util\Column;
 use modmore\Commerce\Admin\Widgets\GridWidget;
@@ -11,23 +12,23 @@ class Grid extends GridWidget {
     public $key = 'timeslots-schedule-grid';
     public $title = '';
 
-    public function getItems(array $options = array())
+    public function getItems(array $options = []): array
     {
         $items = [];
 
-        $c = $this->adapter->newQuery('ctsSchedule');
-        $c->select($this->adapter->getSelectColumns('ctsSchedule', 'ctsSchedule'));
+        $c = $this->adapter->newQuery(ctsSchedule::class);
+        $c->select($this->adapter->getSelectColumns(ctsSchedule::class, 'ctsSchedule'));
 
         $sortby = array_key_exists('sortby', $options) && !empty($options['sortby']) ? $this->adapter->escape($options['sortby']) : $this->defaultSort;
         $sortdir = array_key_exists('sortdir', $options) && strtoupper($options['sortdir']) === 'DESC' ? 'DESC' : 'ASC';
         $c->sortby($sortby, $sortdir);
 
-        $count = $this->adapter->getCount('ctsSchedule', $c);
+        $count = $this->adapter->getCount(ctsSchedule::class, $c);
         $this->setTotalCount($count);
 
         $c->limit($options['limit'], $options['start']);
         /** @var \ctsSchedule[] $collection */
-        $collection = $this->adapter->getCollection('ctsSchedule', $c);
+        $collection = $this->adapter->getCollection(ctsSchedule::class, $c);
 
         foreach ($collection as $schedule) {
             $items[] = $this->prepareItem($schedule);
@@ -36,7 +37,7 @@ class Grid extends GridWidget {
         return $items;
     }
 
-    public function getColumns(array $options = array())
+    public function getColumns(array $options = []): array
     {
         return [
             new Column('name', $this->adapter->lexicon('commerce.name'), true, true),
@@ -44,7 +45,7 @@ class Grid extends GridWidget {
         ];
     }
 
-    public function prepareItem(\ctsSchedule $schedule)
+    public function prepareItem(\ctsSchedule $schedule): array
     {
         $item = $schedule->toArray();
 
@@ -164,7 +165,7 @@ class Grid extends GridWidget {
     }
 
 
-    public function getTopToolbar(array $options = array())
+    public function getTopToolbar(array $options = []): array
     {
         $toolbar = [];
 
@@ -177,6 +178,19 @@ class Grid extends GridWidget {
             'icon_class' => 'plus',
             'modal_title' => $this->adapter->lexicon('commerce_timeslots.add_schedule'),
             'position' => 'top',
+            'width' => 'eight wide',
+        ];
+
+        $toolbar[] = [
+            'name' => 'populate',
+            'title' => $this->adapter->lexicon('commerce_timeslots.populate_daily_slots'),
+            'type' => 'button',
+            'link' => $this->adapter->makeAdminUrl('timeslots/schedule/populate'),
+            'button_class' => 'right floated green commerce-ajax-modal ',
+            'icon_class' => 'bolt',
+            'modal_title' => $this->adapter->lexicon('commerce_timeslots.populate'),
+            'position' => 'top',
+            'width' => 'eight wide',
         ];
 
         $toolbar[] = [
