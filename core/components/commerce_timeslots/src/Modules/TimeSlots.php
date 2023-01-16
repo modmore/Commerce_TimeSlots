@@ -13,7 +13,7 @@ use modmore\Commerce_TimeSlots\Admin\Schedule\Delete;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Duplicate;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Overview;
 use modmore\Commerce_TimeSlots\Admin\Schedule\Update;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use modmore\Commerce\Dispatcher\EventDispatcher;
 
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
