@@ -75,6 +75,19 @@ class TimeSlotsShippingMethod extends comShippingMethod
             $shipment->setProperty('timeslots_date', $selectedDate);
             $shipment->unsetProperty('timeslots_slot');
         }
+        // Set the date via submitted slot id if no date was provided by the template
+        else if (array_key_exists('slot', $data)) {
+            foreach ($datesWithAvailability as $k => $date) {
+                if (isset($date['slots'][$data['slot']])) {
+                    $selectedDate = $k; // Date string is the array key
+                    $selectedDateInfo = $options[$selectedDate];
+                    $selectedDateSlots = $options[$selectedDate]['slots'];
+                    $shipment->setProperty('timeslots_date', $selectedDate);
+                    $shipment->unsetProperty('timeslots_slot');
+                    break;
+                }
+            }
+        }
 
         // Check for a submitted slot on said day
         if (array_key_exists('slot', $data)

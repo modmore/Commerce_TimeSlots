@@ -1,8 +1,6 @@
 <?php
 namespace modmore\Commerce_TimeSlots\Modules;
 
-use DateInterval;
-use DateTime;
 use modmore\Commerce\Events\Admin\GeneratorEvent;
 use modmore\Commerce\Events\Admin\TopNavMenu;
 use modmore\Commerce\Events\Checkout;
@@ -33,7 +31,7 @@ class TimeSlots extends BaseModule {
         return $this->adapter->lexicon('commerce_timeslots');
     }
 
-    public function getAuthor()
+    public function getAuthor(): string
     {
         return 'modmore';
     }
@@ -79,6 +77,7 @@ class TimeSlots extends BaseModule {
         $generator->addPage('timeslots/schedule/edit', Update::class);
         $generator->addPage('timeslots/schedule/delete', Delete::class);
         $generator->addPage('timeslots/schedule/duplicate', Duplicate::class);
+        $generator->addPage('timeslots/schedule/populate', \modmore\Commerce_TimeSlots\Admin\Schedule\Populate::class);
         $generator->addPage('timeslots/schedule/slot/add', \modmore\Commerce_TimeSlots\Admin\Schedule\Slot\Create::class);
         $generator->addPage('timeslots/schedule/slot/edit', \modmore\Commerce_TimeSlots\Admin\Schedule\Slot\Update::class);
         $generator->addPage('timeslots/schedule/slot/delete', \modmore\Commerce_TimeSlots\Admin\Schedule\Slot\Delete::class);
@@ -218,20 +217,32 @@ class TimeSlots extends BaseModule {
         return $fields;
     }
 
-    private function insertInArray($array,$values,$offset)
+    /**
+     * @param array $array
+     * @param array $values
+     * @param int $offset
+     * @return array
+     */
+    private function insertInArray(array $array, array $values, int $offset): array
     {
         return array_slice($array, 0, $offset, true) + $values + array_slice($array, $offset, NULL, true);
     }
 
-    public static function populateDailySlots($commerce) {
-
+    /**
+     * @param \Commerce $commerce
+     * @param bool $manual
+     * @return void
+     * @throws \Exception
+     */
+    public static function populateDailySlots(\Commerce $commerce, bool $manual = false)
+    {
         $c = $commerce->adapter->newQuery(\ctsDate::class);
         $c->select($commerce->adapter->getSelectColumns(\ctsDate::class, \ctsDate::class));
         $c->where([
             'for_date:>=' => date('Y-m-d')
         ]);
 
-        if (31 > $commerce->adapter->getCount(\ctsDate::class, $c)) {
+        if (31 > $commerce->adapter->getCount(\ctsDate::class, $c) || $manual) {
             \ctsDate::createFutureDates($commerce->adapter, true);
         }
     }

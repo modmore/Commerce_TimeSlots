@@ -23,8 +23,8 @@ if (!defined('MOREPROVIDER_BUILD')) {
     /* define version */
     define('PKG_NAME', 'Commerce_TimeSlots');
     define('PKG_NAMESPACE', 'commerce_timeslots');
-    define('PKG_VERSION', '1.1.0');
-    define('PKG_RELEASE', 'rc1');
+    define('PKG_VERSION', '1.2.0');
+    define('PKG_RELEASE', 'pl');
 
     /* load modx */
     require_once dirname(__DIR__) . '/config.core.php';
