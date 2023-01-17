@@ -25,6 +25,9 @@ class Form extends FormWidget
         $fields[] = new HiddenField($this->commerce, [
             'name' => 'for_date',
         ]);
+        $fields[] = new HiddenField($this->commerce, [
+            'name' => 'shipping_method',
+        ]);
 
         $fields[] = new DateTimeField($this->commerce, [
             'name' => 'time_from',

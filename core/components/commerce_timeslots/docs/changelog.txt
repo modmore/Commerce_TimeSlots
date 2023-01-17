@@ -1,3 +1,5 @@
+- Fix manually adding a time slot to a specific shipping method
+
 TimeSlots for Commerce 1.2.0-pl
 ----------------------------------
 Released on 2022-11-25

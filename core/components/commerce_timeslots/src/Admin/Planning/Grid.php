@@ -36,7 +36,7 @@ class Grid extends GridWidget {
         $c = $this->adapter->newQuery(\ctsDate::class);
         $c->select($this->adapter->getSelectColumns(\ctsDate::class, \ctsDate::class));
         $c->where([
-            'for_date:>=' => date('Y-m-d')
+            'for_date:>=' => date('Y-m-d'),
         ]);
 
         if (31 > $this->adapter->getCount(\ctsDate::class, $c)) {
@@ -89,6 +89,7 @@ class Grid extends GridWidget {
         }
 
         $addSlotLink = $this->adapter->makeAdminUrl('timeslots/planning/slot/add', [
+            'shipping_method' => $this->method->get('id'),
             'for_date' => $date->get('id'),
             'time_from' => $date->get('for_date'),
             'time_until' => $date->get('for_date'),
