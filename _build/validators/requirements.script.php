@@ -74,13 +74,13 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
 
         $modxVersion = $modx->getVersionData();
         if (!checkVersion('MODX', $modxVersion['full_version'], [
-            '2019-11-27 12:00:00' => '2.7',
+            '2019-11-27 12:00:00' => '2.8',
         ], $modx)) {
             $success = false;
         }
 
         if (!checkVersion('PHP', PHP_VERSION, [
-            '2019-07-01 12:00:00' => '7.1',
+            '2019-07-01 12:00:00' => '7.4',
         ], $modx)) {
             $success = false;
         }
@@ -93,7 +93,7 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
         $commerce = $modx->getService('commerce', 'Commerce', $corePath, $params);
         if ($commerce instanceof Commerce) {
             if (!checkVersion('Commerce', (string)$commerce->version, [
-                '2019-01-01 12:00:00' => '1.1',
+                '2019-01-01 12:00:00' => '1.3',
             ], $modx)) {
                 $success = false;
             }
