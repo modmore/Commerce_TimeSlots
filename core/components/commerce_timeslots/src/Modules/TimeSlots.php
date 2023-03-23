@@ -1,6 +1,8 @@
 <?php
 namespace modmore\Commerce_TimeSlots\Modules;
 
+use Commerce;
+use Exception;
 use modmore\Commerce\Events\Admin\GeneratorEvent;
 use modmore\Commerce\Events\Admin\TopNavMenu;
 use modmore\Commerce\Events\Checkout;
@@ -55,9 +57,9 @@ class TimeSlots extends BaseModule {
         $root = dirname(__DIR__, 2);
         $this->commerce->view()->addTemplatesPath($root . '/templates/');
 
-        $dispatcher->addListener(\Commerce::EVENT_DASHBOARD_INIT_GENERATOR, [$this, 'initGenerator']);
-        $dispatcher->addListener(\Commerce::EVENT_DASHBOARD_GET_MENU, [$this, 'getMenu']);
-        $dispatcher->addListener(\Commerce::EVENT_CHECKOUT_BEFORE_STEP, [$this, 'beforeCheckoutStep']);
+        $dispatcher->addListener(Commerce::EVENT_DASHBOARD_INIT_GENERATOR, [$this, 'initGenerator']);
+        $dispatcher->addListener(Commerce::EVENT_DASHBOARD_GET_MENU, [$this, 'getMenu']);
+        $dispatcher->addListener(Commerce::EVENT_CHECKOUT_BEFORE_STEP, [$this, 'beforeCheckoutStep']);
 
 
         // Requires the Scheduler service in Commerce 1.3+
@@ -229,12 +231,12 @@ class TimeSlots extends BaseModule {
     }
 
     /**
-     * @param \Commerce $commerce
-     * @param bool $manual
+     * @param Commerce $commerce
+     * @param array $data
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function populateDailySlots(\Commerce $commerce, bool $manual = false)
+    public static function populateDailySlots(Commerce $commerce, array $data = []): void
     {
         $c = $commerce->adapter->newQuery(\ctsDate::class);
         $c->select($commerce->adapter->getSelectColumns(\ctsDate::class, \ctsDate::class));
@@ -242,7 +244,7 @@ class TimeSlots extends BaseModule {
             'for_date:>=' => date('Y-m-d')
         ]);
 
-        if (31 > $commerce->adapter->getCount(\ctsDate::class, $c) || $manual) {
+        if (31 > $commerce->adapter->getCount(\ctsDate::class, $c) || !empty($data['manual'])) {
             \ctsDate::createFutureDates($commerce->adapter, true);
         }
     }
