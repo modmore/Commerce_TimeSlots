@@ -230,11 +230,11 @@ class TimeSlots extends BaseModule {
 
     /**
      * @param \Commerce $commerce
-     * @param bool $manual
+     * @param bool|null $manual
      * @return void
      * @throws \Exception
      */
-    public static function populateDailySlots(\Commerce $commerce, bool $manual = false)
+    public static function populateDailySlots(\Commerce $commerce, ?bool $manual = null)
     {
         $c = $commerce->adapter->newQuery(\ctsDate::class);
         $c->select($commerce->adapter->getSelectColumns(\ctsDate::class, \ctsDate::class));
