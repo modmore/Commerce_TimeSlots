@@ -234,7 +234,7 @@ class TimeSlots extends BaseModule {
      * @return void
      * @throws \Exception
      */
-    public static function populateDailySlots(\Commerce $commerce, ?bool $manual = null)
+    public static function populateDailySlots(\Commerce $commerce, array $data = [])
     {
         $c = $commerce->adapter->newQuery(\ctsDate::class);
         $c->select($commerce->adapter->getSelectColumns(\ctsDate::class, \ctsDate::class));
@@ -242,7 +242,7 @@ class TimeSlots extends BaseModule {
             'for_date:>=' => date('Y-m-d')
         ]);
 
-        if (31 > $commerce->adapter->getCount(\ctsDate::class, $c) || $manual) {
+        if (!empty($data['manual']) || 31 > $commerce->adapter->getCount(\ctsDate::class, $c)) {
             \ctsDate::createFutureDates($commerce->adapter, true);
         }
     }

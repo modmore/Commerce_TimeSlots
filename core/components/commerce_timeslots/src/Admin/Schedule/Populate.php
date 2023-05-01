@@ -23,7 +23,7 @@ class Populate extends Page
         $options = $this->getOptions();
         if (!empty($options['populate'])) {
             try {
-                TimeSlots::populateDailySlots($this->commerce, true);
+                TimeSlots::populateDailySlots($this->commerce, ['manual' => true]);
             }
             catch (\Exception $e) {
                 $this->adapter->log(\modX::LOG_LEVEL_ERROR,
