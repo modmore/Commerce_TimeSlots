@@ -1,4 +1,5 @@
 <?php
+
 namespace modmore\Commerce_TimeSlots\Modules;
 
 use Commerce;
@@ -17,15 +18,15 @@ use modmore\Commerce\Dispatcher\EventDispatcher;
 
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
-class TimeSlots extends BaseModule {
-
-    const SUNDAY = 1;
-    const MONDAY = 2;
-    const TUESDAY = 3;
-    const WEDNESDAY = 4;
-    const THURSDAY = 5;
-    const FRIDAY = 6;
-    const SATURDAY = 7;
+class TimeSlots extends BaseModule
+{
+    public const SUNDAY = 1;
+    public const MONDAY = 2;
+    public const TUESDAY = 3;
+    public const WEDNESDAY = 4;
+    public const THURSDAY = 5;
+    public const FRIDAY = 6;
+    public const SATURDAY = 7;
 
     public function getName()
     {
@@ -227,7 +228,7 @@ class TimeSlots extends BaseModule {
      */
     private function insertInArray(array $array, array $values, int $offset): array
     {
-        return array_slice($array, 0, $offset, true) + $values + array_slice($array, $offset, NULL, true);
+        return array_slice($array, 0, $offset, true) + $values + array_slice($array, $offset, null, true);
     }
 
     /**
