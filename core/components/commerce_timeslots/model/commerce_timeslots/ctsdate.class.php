@@ -83,7 +83,8 @@ class ctsDate extends comSimpleObject
                             // Check for existing date slots that match this base slot
                             $dateSlot = $adapter->getObject(\ctsDateSlot::Class, [
                                 'for_date' => $record->get('id'),
-                                'base_slot' => $baseSlot->get('id')
+                                'base_slot' => $baseSlot->get('id'),
+                                'shipping_method' => $methodId,
                             ]);
                             if ($dateSlot) {
                                 // Don't create a duplicate

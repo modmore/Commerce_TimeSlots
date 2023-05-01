@@ -1,3 +1,4 @@
+- Fix filling in schedules when populating dates with multiple time slot methods active
 - Fix automatic date/schedule population not using the commerce_timeslots.prefill_future_days system setting
 - Fix scheduler method to always expect an array (Commerce 1.3.1+)
 - Fix manually adding a time slot to a specific shipping method
