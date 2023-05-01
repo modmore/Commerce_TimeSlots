@@ -242,7 +242,8 @@ class TimeSlots extends BaseModule {
             'for_date:>=' => date('Y-m-d')
         ]);
 
-        if (!empty($data['manual']) || 31 > $commerce->adapter->getCount(\ctsDate::class, $c)) {
+        $prefill = (int)$commerce->adapter->getOption('commerce_timeslots.prefill_future_days', null, 31);
+        if (!empty($data['manual']) || $prefill > $commerce->adapter->getCount(\ctsDate::class, $c)) {
             \ctsDate::createFutureDates($commerce->adapter, true);
         }
     }
