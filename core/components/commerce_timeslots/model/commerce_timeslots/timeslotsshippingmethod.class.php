@@ -1,6 +1,8 @@
 <?php
 
 use modmore\Commerce\Admin\Widgets\Form\NumberField;
+use modmore\Commerce\Admin\Widgets\Form\SelectField;
+use modmore\Commerce\Admin\Widgets\Form\Tab;
 
 /**
  * TimeSlots for Commerce.
@@ -23,6 +25,10 @@ class TimeSlotsShippingMethod extends comShippingMethod
     {
         $fields = parent::getModelFields();
 
+        $fields[] = new Tab($this->commerce, [
+            'label' => $this->adapter->lexicon('commerce_timeslots'),
+        ]);
+
         $fields[] = new NumberField($this->commerce, [
             'name' => 'properties[max_days_visible]',
             'label' => $this->adapter->lexicon('commerce_timeslots.max_days_visible'),
@@ -31,6 +37,34 @@ class TimeSlotsShippingMethod extends comShippingMethod
             'max' => 31,
             'value' => $this->getProperty('max_days_visible', 7),
         ]);
+
+        $descendants = $this->adapter->getDescendants('comShippingMethod');
+        $options = [
+            [
+                'value' => '',
+                'label' => '(none)'
+            ]
+        ];
+        foreach ($descendants as $descendant) {
+            if ($descendant !== 'TimeSlotsShippingMethod') {
+                $options[] = [
+                    'value' => $descendant,
+                    'label' => $this->adapter->lexicon('commerce.' . $descendant),
+                ];
+            }
+        }
+
+        $fields[] = new SelectField($this->commerce, [
+            'name' => 'properties[composite_method]',
+            'label' => $this->adapter->lexicon('commerce_timeslots.composite_method'),
+            'description' => $this->adapter->lexicon('commerce_timeslots.composite_method.desc'),
+            'value' => $this->getProperty('composite_method'),
+            'options' => $options,
+        ]);
+
+        if ($comp = $this->getCompositeMethod()) {
+            $fields = array_merge($fields, $comp->getModelFields());
+        }
 
         return $fields;
     }
@@ -188,9 +222,14 @@ class TimeSlotsShippingMethod extends comShippingMethod
         return $options;
     }
 
-    public function getPriceForShipment(comOrderShipment $shipment)
+    public function getPriceForShipment(comOrderShipment $shipment): int
     {
-        $price = parent::getPriceForShipment($shipment);
+        if ($comp = $this->getCompositeMethod()) {
+            $price = $comp->getPriceForShipment($shipment);
+        }
+        else {
+            $price = parent::getPriceForShipment($shipment);
+        }
 
         $slotInfo = $shipment->getProperty('timeslots_slot_info');
         if (is_array($slotInfo) && array_key_exists('price', $slotInfo) && $slotInfo['shipping_method'] === $this->get('id')) {
@@ -198,5 +237,32 @@ class TimeSlotsShippingMethod extends comShippingMethod
         }
 
         return $price;
+    }
+
+    public function isAvailableForShipment(comOrderShipment $shipment): bool
+    {
+        if (!parent::isAvailableForShipment($shipment)) {
+            return false;
+        }
+        if ($comp = $this->getCompositeMethod()) {
+            return $comp->isAvailableForShipment($shipment);
+        }
+        return true;
+    }
+
+    private function getCompositeMethod(): ?comShippingMethod
+    {
+        $class = $this->getProperty('composite_method');
+        if (empty($class)) {
+            return null;
+        }
+
+        $comp = $this->adapter->newObject($class);
+        if (!($comp instanceof comShippingMethod)) {
+            return null;
+        }
+        $comp->fromArray($this->toArray());
+
+        return $comp;
     }
 }

@@ -53,6 +53,8 @@ $_lang['commerce_timeslots.reservations_available'] = 'reservations available';
 $_lang['commerce_timeslots.reservations_placed'] = 'slots booked';
 $_lang['commerce_timeslots.no_date_slots'] = 'No slots defined, date not available for customers.';
 $_lang['commerce_timeslots.different_schedule'] = 'This slot is not part of the schedule selected for the current date. It may have been manually added or was left over after replacing the schedule.';
+$_lang['commerce_timeslots.composite_method'] = 'Composite Method';
+$_lang['commerce_timeslots.composite_method.desc'] = 'Optionally, you can configure a composite shipping method that will determine the <b>price and availability</b> of this shipping option. That means that the selected shipping method type will use its own rules to set the base price. <b>Individual time slots can still add an extra fee to a specific time slot</b>. Save the shipping method to see the configuration for the chosen composite method.';
 
 // Shipping method / frontend
 $_lang['commerce_timeslots.max_days_visible'] = 'Maximum days visible';
