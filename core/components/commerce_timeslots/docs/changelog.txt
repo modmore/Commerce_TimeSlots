@@ -1,20 +1,18 @@
-TimeSlots for Commerce 1.3.0-pl
+TimeSlots for Commerce 1.2.0-pl
 ----------------------------------
 Released on 2023-05-01
 
+New features:
 - Add ability to have a "composite shipping method" to determine pricing and availability for slots https://docs.modmore.com/en/Commerce/v1/Modules/TimeSlots/index.html#page_composite_shipping_methods
+- Add populate button to manually populate daily slots in addition to the automatic option. [#10]
+- Add ability to select a slot by just the slot id. May be useful for customized templates. [#8]
+
+Fixes/improvements:
 - Fix filling in schedules when populating dates with multiple time slot methods active
 - Fix automatic date/schedule population not using the commerce_timeslots.prefill_future_days system setting
 - Fix scheduler method to always expect an array (Commerce 1.3.1+)
 - Fix manually adding a time slot to a specific shipping method
 - Update to 1.3 EventDispatcher, bumping minimum version to Commerce 1.3 and PHP 7.4
-
-TimeSlots for Commerce 1.2.0-pl
-----------------------------------
-Released on 2022-11-25
-
-- Add populate button to manually populate daily slots in addition to the automatic option. [#10]
-- Add ability to select a slot by just the slot id. May be useful for customized templates. [#8]
 
 TimeSlots for Commerce 1.1.2-pl
 ----------------------------------
