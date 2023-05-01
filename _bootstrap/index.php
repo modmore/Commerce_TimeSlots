@@ -140,6 +140,9 @@ $manager->addField(ctsScheduleSlot::class, 'price', ['after' => 'max_reservation
 $manager->addField(ctsDateSlot::class, 'placed_reservations', ['after' => 'max_reservations']);
 $manager->addIndex(ctsDateSlot::class, 'placed_reservations');
 
+$manager->addField(ctsSchedule::class, 'repeat');
+$manager->addField(ctsSchedule::class, 'repeat_days');
+
 // Clear the cache
 $modx->cacheManager->refresh();
 
