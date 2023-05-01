@@ -226,6 +226,8 @@ class TimeSlotsShippingMethod extends comShippingMethod
     {
         if ($comp = $this->getCompositeMethod()) {
             $price = $comp->getPriceForShipment($shipment);
+            $this->setProperties(array_merge($this->getProperties(), $comp->getProperties()));
+            $this->save();
         }
         else {
             $price = parent::getPriceForShipment($shipment);
@@ -245,7 +247,10 @@ class TimeSlotsShippingMethod extends comShippingMethod
             return false;
         }
         if ($comp = $this->getCompositeMethod()) {
-            return $comp->isAvailableForShipment($shipment);
+            $isAvailable = $comp->isAvailableForShipment($shipment);
+            $this->setProperties(array_merge($this->getProperties(), $comp->getProperties()));
+            $this->save();
+            return $isAvailable;
         }
         return true;
     }
@@ -262,6 +267,7 @@ class TimeSlotsShippingMethod extends comShippingMethod
             return null;
         }
         $comp->fromArray($this->toArray());
+        $comp->setProperty('composite_id', $this->get('id'));
 
         return $comp;
     }
